@@ -1,4 +1,4 @@
-const recipes = [
+export const recipes = [
   {
     id: 1,
     image: "Recette01.jpg",
@@ -1759,7 +1759,7 @@ const recipes = [
     servings: 4,
     ingredients: [
       {
-        ingredient: "Bananes",
+        ingredient: "Banane",
         quantity: 2,
       },
       {
@@ -1825,3 +1825,40 @@ const recipes = [
     ustensils: ["rouleau à patisserie", "fouet"],
   },
 ];
+
+export const ingredients = [];
+export const ustensils = [];
+export const appliances = [];
+
+const setIngredients = new Set();
+const setUstensils = new Set();
+const setAppliances = new Set();
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+for (const recipe of recipes) {
+  for (const ingredient of recipe.ingredients) {
+    setIngredients.add(capitalize(ingredient.ingredient));
+  }
+  setAppliances.add(capitalize(recipe.appliance));
+  for (const ustensil of recipe.ustensils) {
+    setUstensils.add(capitalize(ustensil));
+  }
+}
+
+const fnSort = (item1, item2) => item1.localeCompare(item2);
+
+ingredients.push(...setIngredients);
+ingredients.sort(fnSort);
+
+ustensils.push(...setUstensils);
+ustensils.sort(fnSort);
+
+appliances.push(...setAppliances);
+appliances.sort(fnSort);
+
+recipes.sort((item1, item2) => {
+  return fnSort(item1.name, item2.name);
+});

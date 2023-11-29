@@ -1,0 +1,11 @@
+$breakpoints: (
+  tablet: (
+    min-width: 768px,
+  ),
+  desktop: (
+    min-width: 1024px,
+  ),
+);
+
+$font-family-default: "Manrope", sans-serif;
+$font-family-title: "Anton", sans-serif;

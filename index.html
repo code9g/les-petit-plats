@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Les petits plats</title>
+
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
 <body>
@@ -14,20 +16,78 @@
     <main>
         <section class="filter">
             <div class="container">
+                <style>
+                    .live-search {
+                        width: max-content;
+                        border: 1px solid grey;
+                        border-radius: 11px;
+                    }
 
-            </div>
-        </section>
-        <section class="recipes">
-            <div class="container">
-                <div class="row">
-                    <div class="col-4">
-                        <article class="card"></article>
+                    .list {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                        margin-bottom: 16px;
+                    }
+
+                    .top {
+                        padding: 4px 16px;
+                        display: flex;
+                        gap: 8px;
+                        justify-content: space-between;
+                    }
+
+                    .content input {
+                        margin: 4px 16px 16px;
+                        border: 1px solid #C6C6C6;
+                        border-radius: 2px;
+                        width: calc(100% - 32px);
+                    }
+
+                    .list {
+                        max-height: 10em;
+                        overflow: auto;
+                    }
+
+                    .list li {
+                        padding: 4px 16px;
+                        cursor: pointer;
+                    }
+
+                    .list li:hover,
+                    .list li.selected:hover {
+                        background-color: red;
+                    }
+
+                    .list li.selected {
+                        background-color: yellow;
+                    }
+
+                    .hidden {
+                        display: none;
+                    }
+                </style>
+                <div class="dropdown">
+
+                </div>
+                <div id="ingredients-filter" class="live-search">
+                    <div class="top">Ingrédients <button type="button">X</button>
+                    </div>
+                    <div class="content hidden">
+                        <input type="text">
+                        <ul class="list">
+
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
+        <section class="recipes">
+            <div class="container cards">
+            </div>
+        </section>
     </main>
-
+    <script type="module" src="scripts/pages/index.js"></script>
 </body>
 
 </html>
