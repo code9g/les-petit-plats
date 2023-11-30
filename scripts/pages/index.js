@@ -74,19 +74,21 @@ class App {
       const h3a = document.createElement("h3");
       h3a.textContent = "Recette";
       const pa = document.createElement("p");
+      pa.className = "description";
       pa.textContent = recipe.description;
 
       const h3b = document.createElement("h3");
       h3b.textContent = "Ingrédients";
 
       const divb = document.createElement("div");
-      divb.className = "row";
+      divb.className = "ingredients";
       for (const ingredient of recipe.ingredients) {
         const divi = document.createElement("div");
-        divi.className = "col-6";
+        divi.className = "ingredient";
         const h4 = document.createElement("h4");
         h4.textContent = ingredient.ingredient;
         const p = document.createElement("p");
+        p.className = "quantity";
         if (ingredient.unit) {
           p.textContent = `${ingredient.quantity} ${ingredient.unit}`;
         } else {
