@@ -13,10 +13,12 @@
 @import "base/animations";
 
 // layout
+@import "layout/filters";
 
 // components
 @import "components/cards";
 @import "components/card";
+@import "components/dropdown";
 
 // pages
 @import "pages/home";

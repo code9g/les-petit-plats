@@ -15,7 +15,17 @@ a {
   text-decoration: none;
 }
 
-h1 {
-  font-size: 3rem;
-  font-weight: 400;
+input {
+  border-radius: 2px;
+  border: 1px solid #c6c6c6;
+  padding: 0.6em;
+  font-size: inherit;
+
+  &:focus {
+    border: 1px solid #c6c6c6;
+  }
+
+  &:active {
+    border: 1px solid #c6c6c6;
+  }
 }

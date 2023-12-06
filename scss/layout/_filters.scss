@@ -1,0 +1,14 @@
+.filters .container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2rem;
+  padding: 4rem 0;
+
+  .dropdown {
+    min-width: 30rem;
+
+    .dropdown-button {
+      width: 100%;
+    }
+  }
+}

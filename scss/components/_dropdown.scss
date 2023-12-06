@@ -1,0 +1,95 @@
+$selected-item: #ffd15b;
+
+.dropdown {
+  --padding-item: 1rem 1.6rem;
+
+  background: white;
+  position: relative;
+  font-size: 1.4rem;
+
+  &-button {
+    position: relative;
+    border: 1px solid grey;
+    padding: 1rem 4rem 1rem 2rem;
+    background: transparent;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  &-button::after {
+    position: absolute;
+    display: block;
+    content: "";
+    background: url(../img/down.svg) no-repeat center / cover transparent;
+
+    width: 1rem;
+    height: 1rem;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+  }
+
+  &-content {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+
+    border-radius: 0.5rem;
+  }
+
+  .list {
+    list-style: none;
+    max-height: 200px;
+    overflow: auto;
+
+    li {
+      display: flex;
+      padding: var(--padding-item);
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    li:hover {
+      background-color: $selected-item;
+    }
+
+    li[data-hidden] {
+      display: none;
+    }
+
+    li[data-selected] {
+      background-color: $selected-item;
+      font-weight: 700;
+
+      &::after {
+        display: block;
+      }
+
+      .close {
+        display: unset;
+      }
+    }
+  }
+
+  &-search {
+    padding: var(--padding-item);
+  }
+  .search {
+    width: 100%;
+  }
+
+  .close {
+    display: none;
+    background: url(../img/close-circle-solid.svg) no-repeat center / contain
+      transparent;
+    border: none;
+    font-size: inherit;
+    width: 1.25em;
+    height: 1.25em;
+    cursor: pointer;
+  }
+}
