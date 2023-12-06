@@ -1,4 +1,5 @@
 $selected-item: #ffd15b;
+$radius: 0.8em;
 
 .dropdown {
   --padding-item: 1rem 1.6rem;
@@ -9,13 +10,18 @@ $selected-item: #ffd15b;
 
   &-button {
     position: relative;
-    border: 1px solid grey;
+    border: 1px solid #c6c6c6;
     padding: 1rem 4rem 1rem 2rem;
     background: transparent;
-    border-radius: 0.5rem;
+    border-radius: $radius;
     font-size: 1.6rem;
     text-align: left;
     cursor: pointer;
+
+    &[data-open] {
+      border-bottom: none;
+      border-radius: $radius $radius 0 0;
+    }
   }
 
   &-button::after {
@@ -36,10 +42,32 @@ $selected-item: #ffd15b;
     background-color: white;
     width: 100%;
 
-    border-radius: 0.5rem;
+    border: 1px solid #c6c6c6;
+    border-top: none;
+
+    border-radius: 0 0 $radius $radius;
+    overflow: hidden;
+    z-index: 99;
   }
 
-  .list {
+  &-search {
+    position: relative;
+    padding: var(--padding-item);
+    .reset {
+      position: absolute;
+      background: url(../img/close-gray.svg) no-repeat center / contain
+        transparent;
+      width: 1em;
+      border: none;
+      cursor: pointer;
+      height: 1em;
+      top: 50%;
+      right: 1.7em;
+      transform: translateY(-50%);
+    }
+  }
+
+  &-list {
     list-style: none;
     max-height: 200px;
     overflow: auto;
@@ -75,9 +103,6 @@ $selected-item: #ffd15b;
     }
   }
 
-  &-search {
-    padding: var(--padding-item);
-  }
   .search {
     width: 100%;
   }

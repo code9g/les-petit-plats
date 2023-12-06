@@ -1,5 +1,7 @@
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 
+const inputEvent = new CustomEvent("input");
+
 function escapeRegex(string) {
   return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 }
@@ -8,56 +10,16 @@ function replaceDiacritic(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-const openDropdown = (element) => {
-  element
-    .closest(".dropdown")
-    .querySelector(".dropdown-content")
-    .classList.remove("hidden");
-};
-
-const closeDropdown = (element) => {
-  return false;
-  element
-    .closest(".dropdown")
-    .querySelector(".dropdown-content")
-    .classList.add("hidden");
-};
-
-const toggleDropdown = (element) => {
-  element
-    .closest(".dropdown")
-    .querySelector(".dropdown-content")
-    .classList.toggle("hidden");
-};
-
-const selectEvent = (e) => {
-  e.stopPropagation();
-  e.currentTarget.setAttribute("data-selected", "");
-  closeDropdown(e.currentTarget);
-};
-
-const unselectedEvent = (e) => {
-  e.stopPropagation();
-  const target = e.currentTarget.closest("li");
-  target.removeAttribute("data-selected");
-  closeDropdown(target);
-};
-
-const toggleDropDownEvent = (e) => {
-  e.preventDefault();
-  toggleDropdown(e.currentTarget);
-};
-
 function createLiveSearch(
   name,
   title,
-  list,
+  items,
   onSelect,
   onUnselect,
   onOpen,
   onClose
 ) {
-  const result = document.createElement("div");
+  const result = document.createElement("dropdown");
   result.id = `${name}-filter`;
   result.className = "dropdown";
 
@@ -72,6 +34,10 @@ function createLiveSearch(
   const search = document.createElement("div");
   search.className = "dropdown-search";
 
+  const reset = document.createElement("button");
+  reset.type = "button";
+  reset.className = "reset";
+
   const input = document.createElement("input");
   input.type = "text";
   input.id = `${name}-search`;
@@ -79,15 +45,14 @@ function createLiveSearch(
   input.className = "search";
   input.addEventListener("input", (e) => {
     e.preventDefault();
-    const items = ul.childNodes;
     const text = replaceDiacritic(e.currentTarget.value.trim());
     if (text === "") {
-      for (const li of items) {
+      for (const li of ul.childNodes) {
         li.removeAttribute("data-hidden");
       }
     } else {
       const re = new RegExp(escapeRegex(text), "gi");
-      for (const li of items) {
+      for (const li of ul.childNodes) {
         const ref = li.dataset.search;
         if (re.exec(ref)) {
           li.removeAttribute("data-hidden");
@@ -99,16 +64,18 @@ function createLiveSearch(
   });
 
   search.appendChild(input);
+  search.appendChild(reset);
 
   content.appendChild(search);
 
   const ul = document.createElement("ul");
-  ul.className = "list";
+  ul.className = "dropdown-list";
 
-  for (let i = 0; i < list.length; i++) {
-    const item = list[i];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
 
     const li = document.createElement("li");
+    li.className = "dropdown-item";
 
     li.dataset.search = replaceDiacritic(item.trim()).toLowerCase();
     li.dataset.key = i;
@@ -145,15 +112,24 @@ function createLiveSearch(
   button.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.currentTarget.hasAttribute("data-open")) {
+      e.currentTarget.removeAttribute("data-open", "");
+    } else {
+      e.currentTarget.setAttribute("data-open", "");
+    }
     content.classList.toggle("hidden");
+  });
+  reset.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    input.value = "";
+    input.dispatchEvent(inputEvent);
   });
   return result;
 }
 
 class App {
   constructor() {}
-
-  liveSearch(target, list) {}
 
   async run() {
     const filter1 = createLiveSearch("ingredients", "Ingrédients", ingredients);
@@ -177,6 +153,10 @@ class App {
       img.src = `assets/photos/${recipe.image}`;
       img.className = "card-img-top";
       img.alt = "Photo de la recette";
+
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = `${recipe.time} mn`;
 
       const body = document.createElement("div");
       body.className = "card-body";
@@ -220,6 +200,7 @@ class App {
       body.appendChild(divb);
 
       card.appendChild(img);
+      card.appendChild(badge);
       card.appendChild(body);
 
       wrapper.appendChild(card);

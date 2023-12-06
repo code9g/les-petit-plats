@@ -14,11 +14,13 @@
 
 // layout
 @import "layout/filters";
+@import "layout/recipes";
 
 // components
 @import "components/cards";
 @import "components/card";
 @import "components/dropdown";
+@import "components/badge";
 
 // pages
 @import "pages/home";
