@@ -36,7 +36,7 @@ function createLiveSearch(
 
   const reset = document.createElement("button");
   reset.type = "button";
-  reset.className = "reset";
+  reset.className = "reset hidden";
 
   const input = document.createElement("input");
   input.type = "text";
@@ -47,10 +47,12 @@ function createLiveSearch(
     e.preventDefault();
     const text = replaceDiacritic(e.currentTarget.value.trim());
     if (text === "") {
+      reset.classList.add("hidden");
       for (const li of ul.childNodes) {
         li.removeAttribute("data-hidden");
       }
     } else {
+      reset.classList.remove("hidden");
       const re = new RegExp(escapeRegex(text), "gi");
       for (const li of ul.childNodes) {
         const ref = li.dataset.search;
@@ -124,6 +126,7 @@ function createLiveSearch(
     e.stopPropagation();
     input.value = "";
     input.dispatchEvent(inputEvent);
+    input.focus();
   });
   return result;
 }

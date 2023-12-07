@@ -30,10 +30,10 @@ input {
   font-size: inherit;
 }
 input:focus {
-  border: 1px solid #c6c6c6;
+  outline: 1px solid #c6c6c6;
 }
 input:active {
-  border: 1px solid #c6c6c6;
+  outline: 1px solid #c6c6c6;
 }
 
 .title {
@@ -142,7 +142,11 @@ input:active {
   position: relative;
   border: 1px solid #c6c6c6;
   padding: 1rem 4rem 1rem 2rem;
-  background: transparent;
+  background-image: url(../img/down.svg);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center right 1em;
+  background-size: 1em 1em;
   border-radius: 0.8em;
   font-size: 1.6rem;
   text-align: left;
@@ -151,17 +155,7 @@ input:active {
 .dropdown-button[data-open] {
   border-bottom: none;
   border-radius: 0.8em 0.8em 0 0;
-}
-.dropdown-button::after {
-  position: absolute;
-  display: block;
-  content: "";
-  background: url(../img/down.svg) no-repeat center/cover transparent;
-  width: 1rem;
-  height: 1rem;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
+  background-image: url(../img/up.svg);
 }
 .dropdown-content {
   position: absolute;
@@ -176,17 +170,6 @@ input:active {
 .dropdown-search {
   position: relative;
   padding: var(--padding-item);
-}
-.dropdown-search .reset {
-  position: absolute;
-  background: url(../img/close-gray.svg) no-repeat center/contain transparent;
-  width: 1em;
-  border: none;
-  cursor: pointer;
-  height: 1em;
-  top: 50%;
-  right: 1.7em;
-  transform: translateY(-50%);
 }
 .dropdown-list {
   list-style: none;
@@ -221,6 +204,26 @@ input:active {
 }
 .dropdown .search {
   width: 100%;
+  padding-right: calc(1em + 10px + 1em + 11px);
+  background-image: url(../img/loup-gray.svg);
+  background-position: center right 11px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: 1em 1em;
+}
+.dropdown .search:focus {
+  outline: 1px solid #c6c6c6;
+}
+.dropdown .reset {
+  position: absolute;
+  background: url(../img/close-gray.svg) no-repeat center/cover transparent;
+  width: 0.5em;
+  height: 0.5em;
+  border: none;
+  cursor: pointer;
+  top: 50%;
+  right: calc(1em + 10px + 1em + 11px);
+  transform: translateY(-50%);
 }
 .dropdown .close {
   display: none;
