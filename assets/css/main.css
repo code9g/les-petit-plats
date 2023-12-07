@@ -186,8 +186,10 @@ input:active {
      -moz-user-select: none;
           user-select: none;
 }
-.dropdown-list li:hover {
+.dropdown-list li:hover,
+.dropdown-list li:focus {
   background-color: #ffd15b;
+  outline: none;
 }
 .dropdown-list li[data-hidden] {
   display: none;

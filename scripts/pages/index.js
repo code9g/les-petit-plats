@@ -43,6 +43,8 @@ function createLiveSearch(
   input.id = `${name}-search`;
   input.name = input.id;
   input.className = "search";
+  input.placeholder = "Rechercher...";
+  input.autofocus = "true";
   input.addEventListener("input", (e) => {
     e.preventDefault();
     const text = replaceDiacritic(e.currentTarget.value.trim());
@@ -78,6 +80,7 @@ function createLiveSearch(
 
     const li = document.createElement("li");
     li.className = "dropdown-item";
+    li.tabIndex = -1;
 
     li.dataset.search = replaceDiacritic(item.trim()).toLowerCase();
     li.dataset.key = i;
@@ -114,10 +117,15 @@ function createLiveSearch(
   button.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.currentTarget.hasAttribute("data-open")) {
-      e.currentTarget.removeAttribute("data-open", "");
+    input.value = "";
+
+    input.dispatchEvent(inputEvent);
+    //input.focus();
+    if (button.hasAttribute("data-open")) {
+      button.removeAttribute("data-open", "");
     } else {
-      e.currentTarget.setAttribute("data-open", "");
+      button.setAttribute("data-open", "");
+      //input.focus();
     }
     content.classList.toggle("hidden");
   });
@@ -128,6 +136,57 @@ function createLiveSearch(
     input.dispatchEvent(inputEvent);
     input.focus();
   });
+  let index = -1;
+  // result.addEventListener("keyup", (e) => {
+  //   const list = e.currentTarget.querySelectorAll("li:not([data-hidden])");
+  //   switch (e.key) {
+  //     case "Enter":
+  //       break;
+  //     case "ArrowDown":
+  //       e.preventDefault();
+  //       e.stopPropagation();
+  //       index++;
+  //       if (index < 0) {
+  //         index = 0;
+  //       } else if (index >= list.length) {
+  //         index = list.length - 1;
+  //       }
+  //       e.currentTarget
+  //         .querySelectorAll("li:not([data-hidden])")
+  //         [index].focus();
+  //       break;
+  //     case "ArrowUp":
+  //       e.preventDefault();
+  //       e.stopPropagation();
+  //       index--;
+  //       if (index < 0) {
+  //         index = 0;
+  //       } else if (index >= list.length) {
+  //         index = list.length - 1;
+  //       }
+  //       e.currentTarget
+  //         .querySelectorAll("li:not([data-hidden])")
+  //         [index].focus();
+  //       break;
+  //     case "Escape":
+  //       if (e.target === input && input.value !== "") {
+  //         e.preventDefault();
+  //         e.stopPropagation();
+  //         input.value = "";
+  //         input.dispatchEvent(inputEvent);
+  //       } else if (button.hasAttribute("data-open")) {
+  //         e.preventDefault();
+  //         e.stopPropagation();
+  //         button.removeAttribute("data-open");
+  //         content.classList.toggle("hidden");
+  //         button.blur();
+  //       }
+
+  //       break;
+  //     default:
+  //       console.log("target:", e.target, "key:", e.key);
+  //   }
+  // });
   return result;
 }
 
