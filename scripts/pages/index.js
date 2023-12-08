@@ -1,5 +1,3 @@
-import * as dropdown from "../components/HTMLDropdownSearchElement.js";
-
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 
 const inputEvent = new CustomEvent("input");
