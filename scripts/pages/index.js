@@ -1,3 +1,5 @@
+import * as dropdown from "../components/HTMLDropdownSearchElement.js";
+
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 
 const inputEvent = new CustomEvent("input");
@@ -145,21 +147,9 @@ function createLiveSearch(
   });
   reset.addEventListener("click", (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    input.value = "";
-    input.dispatchEvent(inputEvent);
+    clearInput(input);
     input.focus();
   });
-  // result.addEventListener("focusin", (e) => {
-  //   if (e.target.closest(".dropdown") !== result) {
-  //   }
-  //   console.log("focusin", e.target);
-  // });
-  // result.addEventListener("focusout", (e) => {
-  //   if (e.target.closest(".dropdown") !== result) {
-  //   }
-  //   console.log("focusout", e.relatedTarget);
-  // });
   return result;
 }
 
@@ -252,6 +242,12 @@ class App {
 
       wrapper.appendChild(card);
     }
+
+    const test = document.querySelector("#ingredients-filter");
+    test.addEventListener("open", (e) => {
+      console.log("open");
+    });
+    test.open = true;
   }
 }
 

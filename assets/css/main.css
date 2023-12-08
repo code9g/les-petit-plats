@@ -228,8 +228,9 @@ button {
   background: url(../img/close-gray.svg) no-repeat transparent;
   background-position: center;
   background-size: 0.5em;
-  width: 1em;
-  height: 1em;
+  border: none;
+  width: 1.25em;
+  height: 1.25em;
   top: 50%;
   right: calc(1em + 10px + 1em + 11px);
   transform: translateY(-50%);
@@ -254,6 +255,24 @@ button {
 }
 .dropdown[data-open] .dropdown-content {
   display: block;
+}
+
+#ingredients-filter2 {
+  background-color: red;
+}
+
+.dd .dd-button img {
+  transform: rotate(180deg);
+}
+
+.dd-button {
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dd-button img {
+  transform: rotate(90deg);
 }
 
 .badge {
