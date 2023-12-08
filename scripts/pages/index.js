@@ -12,13 +12,21 @@ function replaceDiacritic(str) {
 
 function filterList(ul, text) {
   const re = new RegExp(escapeRegex(text), "gi");
+  let counter = 0;
   for (const li of ul.childNodes) {
     const ref = li.dataset.search;
     if (re.exec(ref)) {
       li.removeAttribute("data-hidden");
+      counter++;
     } else {
       li.setAttribute("data-hidden", "");
     }
+  }
+  const last = ul.lastChild; // childNodes[ul.childNodes.length - 1];
+  if (counter == 0) {
+    last.classList.remove("hidden");
+  } else {
+    last.classList.add("hidden");
   }
 }
 
@@ -62,7 +70,7 @@ function createLiveSearch(
 
   const reset = document.createElement("button");
   reset.type = "button";
-  reset.className = "btn-reset";
+  reset.className = "btn-clear";
 
   const input = document.createElement("input");
   input.type = "text";
@@ -106,15 +114,13 @@ function createLiveSearch(
     li.dataset.search = replaceDiacritic(item.trim()).toLowerCase();
     li.dataset.key = i;
 
-    const text = document.createElement("button");
-    text.className = "btn-select";
-    text.type = "button";
-    text.ariaLabel = `Sélectionner ${item}`;
-    text.textContent = item;
-    text.style.display = "block";
-    text.style.width = "100%";
-    text.addEventListener("click", selectListener);
-    li.appendChild(text);
+    const btnSelect = document.createElement("button");
+    btnSelect.className = "btn-select";
+    btnSelect.type = "button";
+    btnSelect.ariaLabel = `Sélectionner ${item}`;
+    btnSelect.textContent = item;
+    btnSelect.addEventListener("click", selectListener);
+    li.appendChild(btnSelect);
 
     const btnUnselect = document.createElement("button");
     btnUnselect.className = "btn-unselect";
@@ -128,6 +134,11 @@ function createLiveSearch(
 
     ul.appendChild(li);
   }
+
+  const liEmpty = document.createElement("li");
+  liEmpty.className = "dropdown-empty hidden";
+  liEmpty.textContent = "Aucun résultat";
+  ul.appendChild(liEmpty);
 
   content.appendChild(ul);
   result.appendChild(button);

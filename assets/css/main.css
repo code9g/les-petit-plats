@@ -216,6 +216,10 @@ button {
 .dropdown-item[data-selected] .btn-unselect {
   display: unset;
 }
+.dropdown-empty {
+  padding: 1rem 1.6rem;
+  color: lightcoral;
+}
 .dropdown .input-search {
   width: 100%;
   padding-right: calc(1em + 10px + 1em + 11px);
@@ -228,13 +232,13 @@ button {
 .dropdown .input-search:focus {
   outline: 1px solid #c6c6c6;
 }
-.dropdown .input-search:-moz-placeholder-shown ~ .btn-reset {
+.dropdown .input-search:-moz-placeholder-shown ~ .btn-clear {
   display: none;
 }
-.dropdown .input-search:placeholder-shown ~ .btn-reset {
+.dropdown .input-search:placeholder-shown ~ .btn-clear {
   display: none;
 }
-.dropdown .btn-reset {
+.dropdown .btn-clear {
   position: absolute;
   background: url(../img/close-gray.svg) no-repeat transparent;
   background-position: center;
@@ -247,10 +251,15 @@ button {
   transform: translateY(-50%);
 }
 .dropdown .btn-select {
+  display: block;
   padding: 1rem 1.6rem;
   border: none;
   outline: none;
   text-align: left;
+  width: 100%;
+}
+.dropdown .btn-select:focus {
+  background-color: #ffd15b;
 }
 .dropdown .btn-unselect {
   display: none;

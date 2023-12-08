@@ -56,7 +56,6 @@ $padding-x: 1.125em;
 
     border: 1px solid $border-color;
     border-top: none;
-
     border-radius: 0 0 $radius $radius;
     overflow: hidden;
   }
@@ -107,6 +106,11 @@ $padding-x: 1.125em;
     }
   }
 
+  &-empty {
+    padding: 1rem 1.6rem;
+    color: lightcoral;
+  }
+
   .input-search {
     width: 100%;
     padding-right: calc(1em + 10px + 1em + 11px);
@@ -121,12 +125,12 @@ $padding-x: 1.125em;
       outline: 1px solid $border-color;
     }
 
-    &:placeholder-shown ~ .btn-reset {
+    &:placeholder-shown ~ .btn-clear {
       display: none;
     }
   }
 
-  .btn-reset {
+  .btn-clear {
     position: absolute;
 
     background: url(../img/close-gray.svg) no-repeat transparent;
@@ -143,10 +147,18 @@ $padding-x: 1.125em;
   }
 
   .btn-select {
+    display: block;
+
     padding: 1rem 1.6rem;
     border: none;
     outline: none;
     text-align: left;
+
+    width: 100%;
+
+    &:focus {
+      background-color: $selected-item;
+    }
   }
 
   .btn-unselect {
