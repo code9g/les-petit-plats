@@ -68,7 +68,7 @@ function createLiveSearch(
   input.type = "text";
   input.id = `${name}-search`;
   input.name = input.id;
-  input.className = "search";
+  input.className = "input-search";
   input.placeholder = "Rechercher...";
   input.tabIndex = -1;
   input.autofocus = "true";

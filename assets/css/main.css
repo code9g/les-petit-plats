@@ -216,7 +216,7 @@ button {
 .dropdown-item[data-selected] .btn-unselect {
   display: unset;
 }
-.dropdown .search {
+.dropdown .input-search {
   width: 100%;
   padding-right: calc(1em + 10px + 1em + 11px);
   background-image: url(../img/loup-gray.svg);
@@ -225,13 +225,13 @@ button {
   background-color: transparent;
   background-size: 1em 1em;
 }
-.dropdown .search:focus {
+.dropdown .input-search:focus {
   outline: 1px solid #c6c6c6;
 }
-.dropdown .search:-moz-placeholder-shown ~ .btn-reset {
+.dropdown .input-search:-moz-placeholder-shown ~ .btn-reset {
   display: none;
 }
-.dropdown .search:placeholder-shown ~ .btn-reset {
+.dropdown .input-search:placeholder-shown ~ .btn-reset {
   display: none;
 }
 .dropdown .btn-reset {
