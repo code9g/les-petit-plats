@@ -10,6 +10,27 @@ function replaceDiacritic(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
+function filterList(ul, text) {
+  const re = new RegExp(escapeRegex(text), "gi");
+  for (const li of ul.childNodes) {
+    const ref = li.dataset.search;
+    if (re.exec(ref)) {
+      li.removeAttribute("data-hidden");
+    } else {
+      li.setAttribute("data-hidden", "");
+    }
+  }
+}
+
+function clearInput(element, dispatch = true) {
+  if (element.value !== "") {
+    element.value = "";
+    if (dispatch) {
+      element.dispatchEvent(inputEvent);
+    }
+  }
+}
+
 function createLiveSearch(
   name,
   title,
@@ -19,9 +40,14 @@ function createLiveSearch(
   onOpen,
   onClose
 ) {
-  const result = document.createElement("dropdown");
+  const result = document.createElement("div");
   result.id = `${name}-filter`;
   result.className = "dropdown";
+  result.tabIndex = 0;
+
+  result.addEventListener("focusout", (e) => {
+    console.log("blur", e.relatedTarget);
+  });
 
   const button = document.createElement("button");
   button.type = "button";
@@ -36,7 +62,7 @@ function createLiveSearch(
 
   const reset = document.createElement("button");
   reset.type = "button";
-  reset.className = "reset hidden";
+  reset.className = "btn-reset";
 
   const input = document.createElement("input");
   input.type = "text";
@@ -44,27 +70,11 @@ function createLiveSearch(
   input.name = input.id;
   input.className = "search";
   input.placeholder = "Rechercher...";
+  input.tabIndex = -1;
   input.autofocus = "true";
+  // event sur le changement de l'input par l'utilisateur
   input.addEventListener("input", (e) => {
-    e.preventDefault();
-    const text = replaceDiacritic(e.currentTarget.value.trim());
-    if (text === "") {
-      reset.classList.add("hidden");
-      for (const li of ul.childNodes) {
-        li.removeAttribute("data-hidden");
-      }
-    } else {
-      reset.classList.remove("hidden");
-      const re = new RegExp(escapeRegex(text), "gi");
-      for (const li of ul.childNodes) {
-        const ref = li.dataset.search;
-        if (re.exec(ref)) {
-          li.removeAttribute("data-hidden");
-        } else {
-          li.setAttribute("data-hidden", "");
-        }
-      }
-    }
+    filterList(ul, replaceDiacritic(e.currentTarget.value.trim()));
   });
 
   search.appendChild(input);
@@ -73,40 +83,48 @@ function createLiveSearch(
   content.appendChild(search);
 
   const ul = document.createElement("ul");
-  ul.className = "dropdown-list";
+  ul.className = "dropdown-items";
+
+  const selectListener = (e) => {
+    e.preventDefault();
+    const target = e.currentTarget.closest("li");
+    target.setAttribute("data-selected", "");
+  };
+
+  const unselectListener = (e) => {
+    e.preventDefault();
+    const target = e.currentTarget.closest("li");
+    target.removeAttribute("data-selected");
+  };
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
 
     const li = document.createElement("li");
     li.className = "dropdown-item";
-    li.tabIndex = -1;
 
     li.dataset.search = replaceDiacritic(item.trim()).toLowerCase();
     li.dataset.key = i;
 
-    const text = document.createElement("span");
+    const text = document.createElement("button");
+    text.className = "btn-select";
+    text.type = "button";
+    text.ariaLabel = `Sélectionner ${item}`;
     text.textContent = item;
-
+    text.style.display = "block";
+    text.style.width = "100%";
+    text.addEventListener("click", selectListener);
     li.appendChild(text);
 
     const btnUnselect = document.createElement("button");
-    btnUnselect.className = "close";
+    btnUnselect.className = "btn-unselect";
     btnUnselect.type = "button";
     btnUnselect.ariaLabel = "Déselectionner";
     btnUnselect.ariaHidden = "true";
     li.appendChild(btnUnselect);
 
-    li.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      li.setAttribute("data-selected", "");
-    });
-    btnUnselect.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      li.removeAttribute("data-selected");
-    });
+    //li.addEventListener("click", selectListener);
+    btnUnselect.addEventListener("click", unselectListener);
 
     ul.appendChild(li);
   }
@@ -115,19 +133,15 @@ function createLiveSearch(
   result.appendChild(button);
   result.appendChild(content);
   button.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    input.value = "";
-
-    input.dispatchEvent(inputEvent);
-    //input.focus();
-    if (button.hasAttribute("data-open")) {
-      button.removeAttribute("data-open", "");
+    clearInput(input);
+    if (result.hasAttribute("data-open")) {
+      result.removeAttribute("data-open", "");
     } else {
-      button.setAttribute("data-open", "");
-      //input.focus();
+      result.setAttribute("data-open", "");
+      setTimeout(() => {
+        input.focus();
+      }, 0);
     }
-    content.classList.toggle("hidden");
   });
   reset.addEventListener("click", (e) => {
     e.preventDefault();
@@ -136,56 +150,15 @@ function createLiveSearch(
     input.dispatchEvent(inputEvent);
     input.focus();
   });
-  let index = -1;
-  // result.addEventListener("keyup", (e) => {
-  //   const list = e.currentTarget.querySelectorAll("li:not([data-hidden])");
-  //   switch (e.key) {
-  //     case "Enter":
-  //       break;
-  //     case "ArrowDown":
-  //       e.preventDefault();
-  //       e.stopPropagation();
-  //       index++;
-  //       if (index < 0) {
-  //         index = 0;
-  //       } else if (index >= list.length) {
-  //         index = list.length - 1;
-  //       }
-  //       e.currentTarget
-  //         .querySelectorAll("li:not([data-hidden])")
-  //         [index].focus();
-  //       break;
-  //     case "ArrowUp":
-  //       e.preventDefault();
-  //       e.stopPropagation();
-  //       index--;
-  //       if (index < 0) {
-  //         index = 0;
-  //       } else if (index >= list.length) {
-  //         index = list.length - 1;
-  //       }
-  //       e.currentTarget
-  //         .querySelectorAll("li:not([data-hidden])")
-  //         [index].focus();
-  //       break;
-  //     case "Escape":
-  //       if (e.target === input && input.value !== "") {
-  //         e.preventDefault();
-  //         e.stopPropagation();
-  //         input.value = "";
-  //         input.dispatchEvent(inputEvent);
-  //       } else if (button.hasAttribute("data-open")) {
-  //         e.preventDefault();
-  //         e.stopPropagation();
-  //         button.removeAttribute("data-open");
-  //         content.classList.toggle("hidden");
-  //         button.blur();
-  //       }
-
-  //       break;
-  //     default:
-  //       console.log("target:", e.target, "key:", e.key);
+  // result.addEventListener("focusin", (e) => {
+  //   if (e.target.closest(".dropdown") !== result) {
   //   }
+  //   console.log("focusin", e.target);
+  // });
+  // result.addEventListener("focusout", (e) => {
+  //   if (e.target.closest(".dropdown") !== result) {
+  //   }
+  //   console.log("focusout", e.relatedTarget);
   // });
   return result;
 }
@@ -203,6 +176,18 @@ class App {
     filters.append(filter1);
     filters.append(filter2);
     filters.append(filter3);
+
+    // Fermeture des "dropdowns" quand on clique à l'extérieur
+    document.addEventListener("click", (e) => {
+      const opened = document.querySelectorAll(".dropdown[data-open]");
+      const excepted = e.target.closest(".dropdown");
+
+      opened.forEach((dropdown) => {
+        if (dropdown !== excepted) dropdown.removeAttribute("data-open");
+      });
+
+      console.log("CLICK");
+    });
 
     const wrapper = document.querySelector(".recipes .cards");
     wrapper.innerHTML = "";

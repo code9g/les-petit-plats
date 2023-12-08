@@ -5,8 +5,9 @@ $border-color: #c6c6c6;
 .dropdown {
   --padding-item: 1rem 1.6rem;
 
-  background: white;
   position: relative;
+
+  background: white;
   font-size: 1.4rem;
 
   &-button {
@@ -25,12 +26,6 @@ $border-color: #c6c6c6;
     font-size: 1.6rem;
     text-align: left;
     cursor: pointer;
-
-    &[data-open] {
-      border-bottom: none;
-      border-radius: $radius $radius 0 0;
-      background-image: url(../img/up.svg);
-    }
   }
 
   &-content {
@@ -51,39 +46,42 @@ $border-color: #c6c6c6;
     padding: var(--padding-item);
   }
 
-  &-list {
+  &-items {
     list-style: none;
     max-height: 200px;
     overflow: auto;
+    user-select: none;
+  }
 
-    li {
-      display: flex;
-      padding: var(--padding-item);
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
+  &-item {
+    display: flex;
 
-    li:hover,
-    li:focus {
+    justify-content: space-between;
+    align-items: center;
+
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
       background-color: $selected-item;
       outline: none;
     }
 
-    li[data-hidden] {
+    &[data-hidden] {
       display: none;
     }
 
-    li[data-selected] {
-      background-color: $selected-item;
+    &[data-selected] {
       font-weight: 700;
+      background-color: $selected-item;
+      padding-right: 1.6rem;
+      cursor: default;
 
-      &::after {
-        display: block;
+      .btn-select {
+        cursor: default;
       }
 
-      .close {
+      .btn-unselect {
         display: unset;
       }
     }
@@ -102,28 +100,54 @@ $border-color: #c6c6c6;
     &:focus {
       outline: 1px solid $border-color;
     }
+
+    &:placeholder-shown ~ .btn-reset {
+      display: none;
+    }
   }
 
-  .reset {
+  .btn-reset {
     position: absolute;
-    background: url(../img/close-gray.svg) no-repeat center / cover transparent;
-    width: 0.5em;
-    height: 0.5em;
-    border: none;
-    cursor: pointer;
+
+    background: url(../img/close-gray.svg) no-repeat transparent;
+    background-position: center;
+    background-size: 0.5em;
+
+    width: 1em;
+    height: 1em;
+
     top: 50%;
     right: calc(1em + 10px + 1em + 11px);
     transform: translateY(-50%);
   }
 
-  .close {
+  .btn-select {
+    padding: 1rem 1.6rem;
+    border: none;
+    outline: none;
+    text-align: left;
+  }
+
+  .btn-unselect {
     display: none;
+
     background: url(../img/close-circle-solid.svg) no-repeat center / contain
       transparent;
     border: none;
-    font-size: inherit;
+
     width: 1.25em;
     height: 1.25em;
-    cursor: pointer;
+  }
+
+  &[data-open] {
+    .dropdown-button {
+      border-bottom: none;
+      border-radius: $radius $radius 0 0;
+      background-image: url(../img/up.svg);
+    }
+
+    .dropdown-content {
+      display: block;
+    }
   }
 }
