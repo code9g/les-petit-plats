@@ -57,7 +57,7 @@ function createLiveSearch(
   button.textContent = title;
 
   const content = document.createElement("div");
-  content.className = "dropdown-content hidden";
+  content.className = "dropdown-content";
 
   const search = document.createElement("div");
   search.className = "dropdown-search";
@@ -242,12 +242,6 @@ class App {
 
       wrapper.appendChild(card);
     }
-
-    const test = document.querySelector("#ingredients-filter");
-    test.addEventListener("open", (e) => {
-      console.log("open");
-    });
-    test.open = true;
   }
 }
 

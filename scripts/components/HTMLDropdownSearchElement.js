@@ -2,9 +2,11 @@ const openEvent = new CustomEvent("open");
 const closeEvent = new CustomEvent("close");
 
 export class HTMLDropdownSearchElement extends HTMLElement {
-  static observedAttributes = ["id", "open"];
+  static observedAttributes = ["open", "title"];
+
   constructor() {
     super();
+    this.attachShadow({ mode: "open" });
   }
 
   get open() {
@@ -29,22 +31,44 @@ export class HTMLDropdownSearchElement extends HTMLElement {
 
   connectedCallback() {
     console.log("Custom element added to page.");
-    //const shadow = this.attachShadow({ mode: "open" });
-    const shadow = this;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/dropdown.css";
 
     const dropdownButton = document.createElement("div");
-    dropdownButton.className = "dd-button";
+    dropdownButton.className = "dropdown-toggle";
+    dropdownButton.addEventListener("click", (e) => {
+      this.open = !this.open;
+    });
+    dropdownButton.textContent = this.title;
 
-    const text = document.createElement("div");
-    text.textContent = this.getAttribute("title");
+    const content = document.createElement("div");
+    content.className = "dropdown-content";
 
-    const img = document.createElement("img");
-    img.src = "assets/img/down.svg";
+    const search = document.createElement("div");
+    search.className = "dropdown-search";
 
-    dropdownButton.appendChild(text);
-    dropdownButton.appendChild(img);
+    const inputSearch = document.createElement("input");
+    inputSearch.className = "input-search";
+    inputSearch.type = "text";
+    search.appendChild(inputSearch);
 
-    shadow.appendChild(dropdownButton);
+    const items = document.createElement("ul");
+    items.className = "dropdown-items";
+
+    for (let i = 30; i > 0; i--) {
+      const item = document.createElement("li");
+      item.className = "dropdown-item";
+      item.textContent = i;
+      items.appendChild(item);
+    }
+    content.appendChild(search);
+    content.appendChild(items);
+
+    this.shadowRoot.appendChild(link);
+    this.shadowRoot.appendChild(dropdownButton);
+    this.shadowRoot.appendChild(content);
   }
 
   disconnectedCallback() {
@@ -58,12 +82,23 @@ export class HTMLDropdownSearchElement extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case "open":
-        this.dispatchEvent(newValue === null ? closeEvent : openEvent);
+        this.#openChange(oldValue, newValue);
         break;
-      default:
-        console.log(
-          `Attribute ${name} has changed. ${oldValue} <> ${newValue}`
-        );
+      case "title":
+        this.#titleChange(oldValue, newValue);
+        break;
+    }
+    console.log(`Attribute ${name} has changed. ${oldValue} => ${newValue}`);
+  }
+
+  #openChange(oldValue, newValue) {
+    this.dispatchEvent(newValue === null ? closeEvent : openEvent);
+  }
+
+  #titleChange(oldValue, newValue) {
+    const target = this.shadowRoot.querySelector(".dropdown-title");
+    if (target) {
+      target.textContent = newValue;
     }
   }
 }

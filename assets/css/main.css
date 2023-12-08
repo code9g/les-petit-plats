@@ -148,25 +148,36 @@ button {
   position: relative;
   border: 1px solid #c6c6c6;
   padding: 1rem 4rem 1rem 2rem;
-  background-image: url(../img/down.svg);
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center right 1em;
-  background-size: 1em 1em;
   border-radius: 0.8em;
   font-size: 1.6rem;
   text-align: left;
   cursor: pointer;
 }
+.dropdown-button::after {
+  position: absolute;
+  content: "";
+  background-image: url(../img/down.svg);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  width: 1em;
+  height: 1em;
+  top: 50%;
+  right: 1.125em;
+  transform: translateY(-50%) scaleY(1);
+  transition: transform ease-in-out 0.3s;
+}
 .dropdown-content {
   position: absolute;
+  z-index: 1;
+  display: none;
   background-color: white;
   width: 100%;
   border: 1px solid #c6c6c6;
   border-top: none;
   border-radius: 0 0 0.8em 0.8em;
   overflow: hidden;
-  z-index: 99;
 }
 .dropdown-search {
   position: relative;
@@ -251,28 +262,12 @@ button {
 .dropdown[data-open] .dropdown-button {
   border-bottom: none;
   border-radius: 0.8em 0.8em 0 0;
-  background-image: url(../img/up.svg);
+}
+.dropdown[data-open] .dropdown-button::after {
+  transform: translateY(-50%) scaleY(-1);
 }
 .dropdown[data-open] .dropdown-content {
   display: block;
-}
-
-#ingredients-filter2 {
-  background-color: red;
-}
-
-.dd .dd-button img {
-  transform: rotate(180deg);
-}
-
-.dd-button {
-  background: transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.dd-button img {
-  transform: rotate(90deg);
 }
 
 .badge {
