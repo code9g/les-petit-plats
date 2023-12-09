@@ -1,0 +1,63 @@
+.l-header {
+  .brand {
+    display: inline-block;
+    padding: 5.1rem 6.9rem;
+  }
+
+  h1 {
+    font-size: 4.4rem;
+    color: #ffd15b;
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 3rem;
+  }
+
+  form[name="search"] {
+    position: relative;
+
+    width: 954px;
+    margin: 0 auto;
+  }
+
+  input[name="search"] {
+    padding: 2.4rem 3.5rem;
+    border-radius: 1.1rem;
+
+    &:placeholder-shown + .btn-clear {
+      display: none;
+    }
+  }
+
+  .btn-search {
+    position: absolute;
+    width: 5.1rem;
+    height: 5.2rem;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    border: none;
+    outline: 0;
+    border-radius: 1rem;
+    background: no-repeat center / 50% #000 url(../img/loup-white.svg);
+    transition: background-color ease-in-out 0.3s,
+      background-image ease-in-out 0.3s;
+
+    &:hover {
+      background-color: #ffd15b;
+      background-image: url(../img/loup-black.svg);
+    }
+  }
+
+  .btn-clear {
+    border: none;
+    outline: 0;
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    top: 50%;
+    right: 8.5rem;
+    transform: translateY(-50%);
+    background: no-repeat center / contain transparent
+      url(../img/close-gray.svg);
+  }
+}
