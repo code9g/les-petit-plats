@@ -10,17 +10,18 @@
 
 <body>
     <header class="l-header">
-        <div class="container" style="position: relative; height: 667px;">
-            <img src="assets/img/lampos-aritonang-24gR_9lCdes-unsplash 1.jpg" style="position:absolute">
-            <a class="brand" href="." aria-current="page" style="position:relative">
-                <img src="assets/img/logo.png" alt="Logo Les petits plats">
-            </a>
-            <div style="position:relative; padding: 102px 62px">
-                <h1 style="padding: 0 275px">Cherchez parmi plus de 1500 recettes du quotiden, simples et délicieuses
+        <div class="container">
+            <div class="header-top">
+                <a class="brand" href="." aria-current="page">
+                    <img src="assets/img/logo.png" alt="Logo Les petits plats">
+                </a>
+            </div>
+            <div class="header-content">
+                <h1 class="title">Cherchez parmi plus de 1500 recettes du quotiden, simples et délicieuses
                 </h1>
-                <form name="search" novalidate>
-                    <input type="text" name="search" placeholder="Rechercher une recette, un ingrédient, ..."
-                        style="width: 100%">
+                <form name="search" class="form-search" novalidate>
+                    <input type="text" name="search" class="input-search"
+                        placeholder="Rechercher une recette, un ingrédient, ...">
                     <button class="btn-clear" type="reset"><span class="sr-only">clear input</span></button>
                     <button class="btn-search" type="button"><span class="sr-only">Rechercher</span></button>
                 </form>

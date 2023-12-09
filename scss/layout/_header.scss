@@ -1,29 +1,46 @@
 .l-header {
-  .brand {
-    display: inline-block;
-    padding: 5.1rem 6.9rem;
+  .container {
+    position: relative;
+    background: no-repeat center / cover
+      url("../img/lampos-aritonang-24gR_9lCdes-unsplash 1.jpg");
+    padding-bottom: 133px;
   }
 
-  h1 {
+  .header-top {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 133px;
+    padding-left: 6.9rem;
+  }
+
+  .header-content {
+    padding: 84px 0;
+  }
+
+  .title {
     font-size: 4.4rem;
+    padding: 0 275px;
     color: #ffd15b;
     text-transform: uppercase;
-    margin: 0;
-    margin-bottom: 3rem;
+    margin-bottom: 29px;
   }
 
-  form[name="search"] {
+  .form-search {
     position: relative;
 
-    width: 954px;
+    width: 100%;
+    max-width: 954px;
     margin: 0 auto;
   }
 
-  input[name="search"] {
-    padding: 1.5em 2.1875em;
+  .input-search {
+    padding: 1.5em 8em 1.5em 2.1875em;
+
     font-size: 1.6rem;
 
-    border-radius: 1.1rem;
+    width: 100%;
+    border-radius: 0.6875em;
 
     &:placeholder-shown + .btn-clear {
       display: none;
@@ -33,8 +50,6 @@
   .btn-search {
     position: absolute;
 
-    display: block;
-
     aspect-ratio: 1;
     top: 0.625em;
     bottom: 0.625em;
@@ -42,9 +57,10 @@
 
     border: none;
     outline: 0;
-    border-radius: 1rem;
 
+    border-radius: 0.625em;
     background: no-repeat center / 50% #000 url(../img/loup-white.svg);
+
     transition: all ease-in-out 0.3s;
 
     &:hover {
@@ -54,9 +70,9 @@
   }
 
   .btn-clear {
+    position: absolute;
     border: none;
     outline: 0;
-    position: absolute;
     width: 1em;
     height: 1em;
     top: 50%;
