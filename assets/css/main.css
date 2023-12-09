@@ -99,6 +99,7 @@ h1 {
 .l-header .input-search {
   padding: 1.5em 8em 1.5em 2.1875em;
   font-size: 1.6rem;
+  color: #7a7a7a;
   width: 100%;
   border-radius: 0.6875em;
 }
@@ -320,10 +321,10 @@ h1 {
 .dropdown .input-search:focus {
   outline: 1px solid #c6c6c6;
 }
-.dropdown .input-search:-moz-placeholder-shown ~ .btn-clear {
+.dropdown .input-search:-moz-placeholder-shown + .btn-clear {
   display: none;
 }
-.dropdown .input-search:placeholder-shown ~ .btn-clear {
+.dropdown .input-search:placeholder-shown + .btn-clear {
   display: none;
 }
 .dropdown .btn-clear {

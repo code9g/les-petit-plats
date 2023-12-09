@@ -121,7 +121,7 @@ $padding-x: 1.125em;
       outline: 1px solid $border-color;
     }
 
-    &:placeholder-shown ~ .btn-clear {
+    &:placeholder-shown + .btn-clear {
       display: none;
     }
   }
