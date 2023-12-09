@@ -34,6 +34,7 @@ export function recipeCardTemplate(recipe) {
     const divi = document.createElement("div");
     divi.className = "ingredient";
     const h4 = document.createElement("h4");
+    h4.className = "name";
     h4.textContent = ingredient.ingredient;
     const p = document.createElement("p");
     p.className = "quantity";

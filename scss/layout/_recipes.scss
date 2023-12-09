@@ -3,4 +3,51 @@
     top: 21px;
     right: 21px;
   }
+
+  .ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 21px;
+  }
+
+  .ingredient {
+    flex: 1 0 calc(50% - 21px);
+
+    .name {
+      font-size: 1.4rem;
+      color: #1b1b1b;
+      font-weight: 500;
+    }
+
+    .quantity {
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #7a7a7a;
+    }
+  }
+
+  .title {
+    margin-bottom: 3.2rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: #7a7a7a;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .description {
+    color: #1b1b1b;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 3.2rem;
+    overflow: hidden;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
 }
