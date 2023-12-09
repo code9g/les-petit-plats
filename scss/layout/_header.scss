@@ -20,7 +20,9 @@
   }
 
   input[name="search"] {
-    padding: 2.4rem 3.5rem;
+    padding: 1.5em 2.1875em;
+    font-size: 1.6rem;
+
     border-radius: 1.1rem;
 
     &:placeholder-shown + .btn-clear {
@@ -30,17 +32,20 @@
 
   .btn-search {
     position: absolute;
-    width: 5.1rem;
-    height: 5.2rem;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
+
+    display: block;
+
+    aspect-ratio: 1;
+    top: 0.625em;
+    bottom: 0.625em;
+    right: 0.625em;
+
     border: none;
     outline: 0;
     border-radius: 1rem;
+
     background: no-repeat center / 50% #000 url(../img/loup-white.svg);
-    transition: background-color ease-in-out 0.3s,
-      background-image ease-in-out 0.3s;
+    transition: all ease-in-out 0.3s;
 
     &:hover {
       background-color: #ffd15b;
