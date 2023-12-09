@@ -5,18 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Les petits plats</title>
-
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
 <body>
-    <header>
-        <div class="container"></div>
+    <header class="l-header">
+        <div class="container" style="position: relative; height: 667px;">
+            <img src="assets/img/lampos-aritonang-24gR_9lCdes-unsplash 1.jpg" style="position:absolute">
+            <a class="brand" href="." aria-current="page" style="position:relative">
+                <img src="assets/img/logo.png" alt="Logo Les petits plats">
+            </a>
+            <div style="position:relative; padding: 102px 62px">
+                <h1 style="padding: 0 275px">Cherchez parmi plus de 1500 recettes du quotiden, simples et délicieuses
+                </h1>
+                <form novalidate style="width: 954px; margin: 0 auto; position: relative;">
+                    <input type="search" name="search" placeholder="Rechercher une recette, un ingrédient, ..."
+                        style="width: 100%">
+                    <button class="btn-clear" type="reset"><span class="sr-only">clear input</span>TTTT</button>
+                    <button class="btn-search" type="submit" style="xposition: absolute; right: 0;"><span
+                            class="sr-only">Rechercher</span></button>
+                </form>
+            </div>
+        </div>
     </header>
-    <main>
-        <section class="filters">
+    <main class="l-main">
+        <section id="tags">
             <div class="container">
+                <div class="filters">
 
+                </div>
+                <div class="result">
+                    1500 recettes
+                </div>
+            </div>
+            <div class="container">
+                <div class="tag-selected">
+                    Tags
+                </div>
             </div>
         </section>
         <section class="recipes">

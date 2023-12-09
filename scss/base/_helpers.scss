@@ -1,3 +1,7 @@
+.sr-only {
+  display: none;
+}
+
 .title {
   font-family: $font-family-title;
 }
@@ -9,4 +13,12 @@
 .container {
   max-width: 1440px;
   margin: 0 auto;
+  background-color: $primary-bg-color;
+}
+
+.btn-search {
+  width: 2em;
+  height: 2em;
+  border-radius: 5px;
+  background: no-repeat center / 80% url(../img/loup-grey.svg) black;
 }

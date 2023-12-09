@@ -9,7 +9,6 @@ $padding-x: 1.125em;
 
   position: relative;
 
-  background: white;
   font-size: 1.4rem;
 
   &-button {
@@ -17,6 +16,7 @@ $padding-x: 1.125em;
 
     border: 1px solid $border-color;
     padding: 1rem 4rem 1rem 2rem;
+    background-color: $dropdown-bg-color;
 
     border-radius: $radius;
     font-size: 1.6rem;
@@ -28,11 +28,7 @@ $padding-x: 1.125em;
 
       content: "";
 
-      background-image: url(../img/down.svg);
-      background-color: transparent;
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: contain;
+      background: no-repeat center / contain url(../img/down.svg) transparent;
 
       width: 1em;
       height: 1em;
@@ -51,7 +47,7 @@ $padding-x: 1.125em;
 
     display: none;
 
-    background-color: white;
+    background-color: $dropdown-bg-color;
     width: 100%;
 
     border: 1px solid $border-color;

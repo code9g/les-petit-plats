@@ -171,7 +171,7 @@ class App {
     const filter2 = createLiveSearch("appliances", "Appareils", appliances);
     const filter3 = createLiveSearch("ustensils", "Ustensiles", ustensils);
 
-    const filters = document.querySelector(".filters .container");
+    const filters = document.querySelector(".filters");
 
     filters.append(filter1);
     filters.append(filter2);

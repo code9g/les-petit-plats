@@ -1,7 +1,6 @@
 .cards {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   padding: 0 102px;
   gap: 66px 48px;
 }

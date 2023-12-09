@@ -15,12 +15,13 @@
 // layout
 @import "layout/filters";
 @import "layout/recipes";
+@import "layout/search";
 
 // components
+@import "components/badge";
 @import "components/cards";
 @import "components/card";
 @import "components/dropdown";
-@import "components/badge";
 
 // pages
 @import "pages/home";

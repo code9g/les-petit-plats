@@ -1,8 +1,16 @@
-.filters .container {
+#filters .container {
   display: flex;
-  flex-flow: row nowrap;
-  gap: 2rem;
-  padding: 4rem 102px;
+  justify-content: space-between;
+
+  .filters {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 2rem;
+    padding: 4rem 102px;
+  }
+
+  .results {
+  }
 
   .dropdown {
     min-width: 30rem;
