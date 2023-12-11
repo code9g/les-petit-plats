@@ -82,11 +82,7 @@ $padding-x: 1.125em;
       outline: none;
     }
 
-    &[data-hidden] {
-      display: none;
-    }
-
-    &[data-selected] {
+    &.selected {
       font-weight: 700;
       background-color: $selected-item;
       padding-right: 1.6rem;

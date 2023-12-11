@@ -1,5 +1,6 @@
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
+import { replaceDiacritic } from "../utils/tools.js";
 
 const inputEvent = new CustomEvent("input");
 
@@ -51,10 +52,10 @@ function createLiveSearch(
   name,
   title,
   items,
-  onSelect,
-  onUnselect,
-  onOpen,
-  onClose
+  onSelect = null,
+  onUnselect = null,
+  onOpen = null,
+  onClose = null
 ) {
   const result = document.createElement("div");
   result.id = `${name}-filter`;
@@ -104,13 +105,19 @@ function createLiveSearch(
   const selectListener = (e) => {
     e.preventDefault();
     const target = e.currentTarget.closest("li");
-    target.setAttribute("data-selected", "");
+    target.classList.add("selected");
+    if (onSelect) {
+      onSelect(target);
+    }
   };
 
   const unselectListener = (e) => {
     e.preventDefault();
     const target = e.currentTarget.closest("li");
-    target.removeAttribute("data-selected");
+    target.classList.remove("selected");
+    if (onUnselect) {
+      onSelect(target);
+    }
   };
 
   for (let i = 0; i < items.length; i++) {
@@ -154,11 +161,19 @@ function createLiveSearch(
   button.addEventListener("click", (e) => {
     if (result.classList.contains("open")) {
       result.classList.remove("open");
+      if (onClose) {
+        setTimeout(() => {
+          onClose(result);
+        });
+      }
     } else {
       clearInput(input);
       result.classList.add("open");
       setTimeout(() => {
         input.focus();
+        if (onOpen) {
+          onOpen(result);
+        }
       }, 0);
     }
   });
@@ -171,7 +186,9 @@ function createLiveSearch(
 }
 
 class App {
-  constructor() {}
+  constructor() {
+    this.currentDropdown = null;
+  }
 
   async run() {
     const filter1 = createLiveSearch("ingredients", "Ingrédients", ingredients);

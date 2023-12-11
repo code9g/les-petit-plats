@@ -301,19 +301,16 @@ h1 {
   background-color: #ffd15b;
   outline: none;
 }
-.dropdown-item[data-hidden] {
-  display: none;
-}
-.dropdown-item[data-selected] {
+.dropdown-item.selected {
   font-weight: 700;
   background-color: #ffd15b;
   padding-right: 1.6rem;
   cursor: default;
 }
-.dropdown-item[data-selected] .btn-select {
+.dropdown-item.selected .btn-select {
   cursor: default;
 }
-.dropdown-item[data-selected] .btn-unselect {
+.dropdown-item.selected .btn-unselect {
   visibility: visible;
 }
 .dropdown-empty {

@@ -1,7 +1,7 @@
-function escapeRegex(string) {
+export function escapeRegex(string) {
   return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
-function replaceDiacritic(str) {
+export function replaceDiacritic(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
