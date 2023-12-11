@@ -3,14 +3,6 @@ import { recipeCardTemplate } from "../templates/recipeCard.js";
 
 const inputEvent = new CustomEvent("input");
 
-function escapeRegex(string) {
-  return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
-}
-
-function replaceDiacritic(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
 function filterList(ul, text) {
   const re = new RegExp(escapeRegex(text), "gi");
   let counter = 0;
@@ -38,6 +30,21 @@ function clearInput(element, dispatch = true) {
       element.dispatchEvent(inputEvent);
     }
   }
+}
+
+function handleClick(e) {
+  const opened = document.querySelectorAll(".dropdown.open");
+  const target = e.target;
+  const excepted =
+    target.classList.contains("dropdown") || target.closest(".dropdown");
+
+  opened.forEach((dropdown) => {
+    if (dropdown !== excepted) {
+      dropdown.classList.remove("open");
+    }
+  });
+
+  console.log("CLICK");
 }
 
 function createLiveSearch(
@@ -80,7 +87,7 @@ function createLiveSearch(
   input.className = "input-search";
   input.placeholder = "Rechercher...";
   input.tabIndex = -1;
-  input.autofocus = "true";
+  input.autofocus = true;
   // event sur le changement de l'input par l'utilisateur
   input.addEventListener("input", (e) => {
     filterList(ul, replaceDiacritic(e.currentTarget.value.trim()));
@@ -127,7 +134,7 @@ function createLiveSearch(
     btnUnselect.className = "btn-unselect";
     btnUnselect.type = "button";
     btnUnselect.ariaLabel = "Déselectionner";
-    btnUnselect.ariaHidden = "true";
+    btnUnselect.ariaHidden = true;
     li.appendChild(btnUnselect);
 
     //li.addEventListener("click", selectListener);
@@ -145,11 +152,11 @@ function createLiveSearch(
   result.appendChild(button);
   result.appendChild(content);
   button.addEventListener("click", (e) => {
-    clearInput(input);
-    if (result.hasAttribute("data-open")) {
-      result.removeAttribute("data-open", "");
+    if (result.classList.contains("open")) {
+      result.classList.remove("open");
     } else {
-      result.setAttribute("data-open", "");
+      clearInput(input);
+      result.classList.add("open");
       setTimeout(() => {
         input.focus();
       }, 0);
@@ -178,16 +185,7 @@ class App {
     filters.append(filter3);
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
-    document.addEventListener("click", (e) => {
-      const opened = document.querySelectorAll(".dropdown[data-open]");
-      const excepted = e.target.closest(".dropdown");
-
-      opened.forEach((dropdown) => {
-        if (dropdown !== excepted) dropdown.removeAttribute("data-open");
-      });
-
-      console.log("CLICK");
-    });
+    document.addEventListener("click", handleClick);
 
     const wrapper = document.querySelector(".recipes .cards");
     for (const recipe of recipes) {

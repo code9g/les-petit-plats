@@ -168,7 +168,7 @@ $padding-x: 1.125em;
     height: 1.25em;
   }
 
-  &[data-open] {
+  &.open {
     .dropdown-button {
       border-bottom: none;
       border-radius: $radius $radius 0 0;
