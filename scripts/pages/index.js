@@ -1,6 +1,6 @@
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
-import { replaceDiacritic } from "../utils/tools.js";
+import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const inputEvent = new CustomEvent("input");
 
@@ -10,13 +10,13 @@ function filterList(ul, text) {
   for (const li of ul.childNodes) {
     const ref = li.dataset.search;
     if (re.exec(ref)) {
-      li.removeAttribute("data-hidden");
+      li.classList.remove("hidden");
       counter++;
     } else {
-      li.setAttribute("data-hidden", "");
+      li.classList.add("hidden");
     }
   }
-  const last = ul.lastChild; // childNodes[ul.childNodes.length - 1];
+  const last = ul.lastChild;
   if (counter == 0) {
     last.classList.remove("hidden");
   } else {
@@ -41,12 +41,25 @@ function handleClick(e) {
 
   opened.forEach((dropdown) => {
     if (dropdown !== excepted) {
-      dropdown.classList.remove("open");
+      dropdown.close();
     }
   });
-
-  console.log("CLICK");
 }
+
+const mutaterOpen = {
+  enumerable: true,
+  configurable: true,
+  get: function () {
+    return this.classList.contains("open");
+  },
+  set: function (value) {
+    if (value === true) {
+      this.show();
+    } else {
+      this.close();
+    }
+  },
+};
 
 function createLiveSearch(
   name,
@@ -62,9 +75,30 @@ function createLiveSearch(
   result.className = "dropdown";
   result.tabIndex = 0;
 
-  result.addEventListener("focusout", (e) => {
-    console.log("blur", e.relatedTarget);
-  });
+  Object.defineProperty(result, "open", mutaterOpen);
+
+  result.show = function () {
+    if (!this.open) {
+      if (onOpen) {
+        onOpen(result);
+      }
+      result.classList.add("open");
+      setTimeout(() => {
+        input.focus();
+      }, 0);
+    }
+  };
+
+  result.close = function () {
+    if (this.open) {
+      result.classList.remove("open");
+      if (onClose) {
+        setTimeout(() => {
+          onClose(result);
+        });
+      }
+    }
+  };
 
   const button = document.createElement("button");
   button.type = "button";
@@ -159,22 +193,10 @@ function createLiveSearch(
   result.appendChild(button);
   result.appendChild(content);
   button.addEventListener("click", (e) => {
-    if (result.classList.contains("open")) {
-      result.classList.remove("open");
-      if (onClose) {
-        setTimeout(() => {
-          onClose(result);
-        });
-      }
+    if (result.open) {
+      result.close();
     } else {
-      clearInput(input);
-      result.classList.add("open");
-      setTimeout(() => {
-        input.focus();
-        if (onOpen) {
-          onOpen(result);
-        }
-      }, 0);
+      result.show();
     }
   });
   reset.addEventListener("click", (e) => {
@@ -190,10 +212,47 @@ class App {
     this.currentDropdown = null;
   }
 
+  handleOpen(dropdown) {
+    this.currentDropdown = dropdown;
+    clearInput(dropdown.querySelector(".input-search"));
+    console.log("Open: ", dropdown.id);
+  }
+
+  handleClose(dropdown) {
+    if (this.currentDropdown === dropdown) {
+      this.currentDropdown = null;
+    }
+    console.log("Close: ", dropdown.id);
+  }
+
   async run() {
-    const filter1 = createLiveSearch("ingredients", "Ingrédients", ingredients);
-    const filter2 = createLiveSearch("appliances", "Appareils", appliances);
-    const filter3 = createLiveSearch("ustensils", "Ustensiles", ustensils);
+    const filter1 = createLiveSearch(
+      "ingredients",
+      "Ingrédients",
+      ingredients,
+      null,
+      null,
+      this.handleOpen.bind(this),
+      this.handleClose.bind(this)
+    );
+    const filter2 = createLiveSearch(
+      "appliances",
+      "Appareils",
+      appliances,
+      null,
+      null,
+      this.handleOpen.bind(this),
+      this.handleClose.bind(this)
+    );
+    const filter3 = createLiveSearch(
+      "ustensils",
+      "Ustensiles",
+      ustensils,
+      null,
+      null,
+      this.handleOpen.bind(this),
+      this.handleClose.bind(this)
+    );
 
     const filters = document.querySelector(".filters");
 

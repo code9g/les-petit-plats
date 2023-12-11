@@ -297,6 +297,9 @@ h1 {
   align-items: center;
   cursor: pointer;
 }
+.dropdown-item.hidden {
+  display: none;
+}
 .dropdown-item:hover, .dropdown-item:focus {
   background-color: #ffd15b;
   outline: none;
