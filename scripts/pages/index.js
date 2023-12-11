@@ -1,5 +1,6 @@
 import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
+import { tagTemplate } from "../templates/tag.js";
 import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const inputEvent = new CustomEvent("input");
@@ -74,6 +75,8 @@ function createLiveSearch(
   result.id = `${name}-filter`;
   result.className = "dropdown";
   result.tabIndex = 0;
+  result.dataset.name = name;
+  result.dataset.title = title;
 
   Object.defineProperty(result, "open", mutaterOpen);
 
@@ -139,18 +142,22 @@ function createLiveSearch(
   const selectListener = (e) => {
     e.preventDefault();
     const target = e.currentTarget.closest("li");
-    target.classList.add("selected");
-    if (onSelect) {
-      onSelect(target);
+    if (!target.classList.contains("selected")) {
+      target.classList.add("selected");
+      if (onSelect) {
+        onSelect(result, target);
+      }
     }
   };
 
   const unselectListener = (e) => {
     e.preventDefault();
     const target = e.currentTarget.closest("li");
-    target.classList.remove("selected");
-    if (onUnselect) {
-      onSelect(target);
+    if (target.classList.contains("selected")) {
+      target.classList.remove("selected");
+      if (onUnselect) {
+        onUnselect(result, target);
+      }
     }
   };
 
@@ -225,13 +232,46 @@ class App {
     console.log("Close: ", dropdown.id);
   }
 
+  handleSelect(dropdown, item) {
+    const tags = document.querySelector("#tags-selected");
+    const tag = tagTemplate(
+      dropdown.id,
+      item.dataset.key,
+      item.querySelector(".btn-select").textContent,
+      (e) => {
+        e.preventDefault();
+        item.classList.remove("selected");
+        e.currentTarget.closest(".tag-selected").remove();
+      }
+    );
+    tags.appendChild(tag);
+    dropdown.close();
+  }
+
+  handleUnSelect(dropdown, item) {
+    const tags = document.querySelector("#tags-selected");
+    for (const tag of tags.childNodes) {
+      if (
+        tag.dataset.target === dropdown.id &&
+        tag.dataset.key === item.dataset.key
+      ) {
+        tag.remove();
+      }
+    }
+    dropdown.close();
+  }
+
+  async load() {}
+
+  async prepare() {}
+
   async run() {
     const filter1 = createLiveSearch(
       "ingredients",
       "Ingrédients",
       ingredients,
-      null,
-      null,
+      this.handleSelect.bind(this),
+      this.handleUnSelect.bind(this),
       this.handleOpen.bind(this),
       this.handleClose.bind(this)
     );
@@ -239,8 +279,8 @@ class App {
       "appliances",
       "Appareils",
       appliances,
-      null,
-      null,
+      this.handleSelect.bind(this),
+      this.handleUnSelect.bind(this),
       this.handleOpen.bind(this),
       this.handleClose.bind(this)
     );
@@ -248,8 +288,8 @@ class App {
       "ustensils",
       "Ustensiles",
       ustensils,
-      null,
-      null,
+      this.handleSelect.bind(this),
+      this.handleUnSelect.bind(this),
       this.handleOpen.bind(this),
       this.handleClose.bind(this)
     );
@@ -280,6 +320,7 @@ class App {
   }
 }
 
-const app = new App();
-
-app.run();
+document.addEventListener("DOMContentLoaded", () => {
+  const app = new App();
+  app.run();
+});

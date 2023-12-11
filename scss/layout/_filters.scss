@@ -30,3 +30,15 @@
     }
   }
 }
+
+#ingredients-filter {
+  --selected-bg-color: #{$ingredient-color};
+}
+
+#appliances-filter {
+  --selected-bg-color: #{$appliance-color};
+}
+
+#ustensils-filter {
+  --selected-bg-color: #{$ustensil-color};
+}

@@ -1,0 +1,40 @@
+.tags-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+
+  font-size: 1.4rem;
+
+  .tag-selected {
+    display: flex;
+    gap: 2em;
+    justify-content: space-between;
+    align-items: center;
+
+    //background-color: #ffd15b;
+    padding: 1.25em;
+    border-radius: 0.7em;
+    min-width: 140px;
+  }
+
+  .ingredient-tag {
+    background-color: $ingredient-color;
+  }
+
+  .appliance-tag {
+    background-color: $appliance-color;
+  }
+
+  .ustensil-tag {
+    background-color: $ustensil-color;
+  }
+
+  .btn-clear {
+    border: none;
+    outline: none;
+    background: no-repeat center / contain url(../img/close-black.svg)
+      transparent;
+    aspect-ratio: 1;
+    height: 1em;
+  }
+}

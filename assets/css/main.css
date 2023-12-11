@@ -165,6 +165,18 @@ h1 {
   width: 100%;
 }
 
+#ingredients-filter {
+  --selected-bg-color: #ffd15b;
+}
+
+#appliances-filter {
+  --selected-bg-color: #ffd15b;
+}
+
+#ustensils-filter {
+  --selected-bg-color: #ffd15b;
+}
+
 .recipes .badge {
   top: 21px;
   right: 21px;
@@ -209,6 +221,38 @@ h1 {
   -webkit-box-orient: vertical;
 }
 
+.tags-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  font-size: 1.4rem;
+}
+.tags-selected .tag-selected {
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25em;
+  border-radius: 0.7em;
+  min-width: 140px;
+}
+.tags-selected .ingredient-tag {
+  background-color: #ffd15b;
+}
+.tags-selected .appliance-tag {
+  background-color: #ffd15b;
+}
+.tags-selected .ustensil-tag {
+  background-color: #ffd15b;
+}
+.tags-selected .btn-clear {
+  border: none;
+  outline: none;
+  background: no-repeat center/contain url(../img/close-black.svg) transparent;
+  aspect-ratio: 1;
+  height: 1em;
+}
+
 .badge {
   position: absolute;
   font-size: 1.2rem;
@@ -244,6 +288,7 @@ h1 {
 
 .dropdown {
   --padding-item: 1rem 1.6rem;
+  --selected-bg-color: grey;
   position: relative;
   font-size: 1.4rem;
 }
@@ -301,12 +346,12 @@ h1 {
   display: none;
 }
 .dropdown-item:hover, .dropdown-item:focus {
-  background-color: #ffd15b;
+  background-color: var(--selected-bg-color);
   outline: none;
 }
 .dropdown-item.selected {
   font-weight: 700;
-  background-color: #ffd15b;
+  background-color: var(--selected-bg-color);
   padding-right: 1.6rem;
   cursor: default;
 }
@@ -359,7 +404,7 @@ h1 {
   width: 100%;
 }
 .dropdown .btn-select:focus {
-  background-color: #ffd15b;
+  background-color: var(--selected-bg-color);
 }
 .dropdown .btn-unselect {
   visibility: hidden;
