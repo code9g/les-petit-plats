@@ -269,6 +269,9 @@ class App {
   }
 
   async run() {
+    // Load
+    // Prepare
+    // Render
     const filter1 = createLiveSearch(
       "ingredients",
       "Ingrédients",

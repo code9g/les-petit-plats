@@ -21,26 +21,20 @@
       font-weight: 400;
       color: #1b1b1b;
     }
-
-    .dropdown {
-      min-width: 20rem;
-      width: max-content;
-
-      .dropdown-button {
-        width: 100%;
-      }
-    }
   }
 
   #ingredients-filter {
     --selected-bg-color: #{$ingredient-color};
+    width: 19.5rem;
   }
 
   #appliances-filter {
     --selected-bg-color: #{$appliance-color};
+    width: 17.9rem;
   }
 
   #ustensils-filter {
     --selected-bg-color: #{$ustensil-color};
+    width: 18.8rem;
   }
 }

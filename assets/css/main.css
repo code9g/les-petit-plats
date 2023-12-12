@@ -156,22 +156,17 @@ h1 {
   font-weight: 400;
   color: #1b1b1b;
 }
-#filters .container .dropdown {
-  min-width: 20rem;
-  width: -moz-max-content;
-  width: max-content;
-}
-#filters .container .dropdown .dropdown-button {
-  width: 100%;
-}
 #filters #ingredients-filter {
   --selected-bg-color: #ffd15b;
+  width: 19.5rem;
 }
 #filters #appliances-filter {
   --selected-bg-color: #ffd15b;
+  width: 17.9rem;
 }
 #filters #ustensils-filter {
   --selected-bg-color: #ffd15b;
+  width: 18.8rem;
 }
 
 .recipes .badge {
@@ -295,6 +290,7 @@ h1 {
 }
 .dropdown-button {
   position: relative;
+  width: 100%;
   border: 1px solid #c6c6c6;
   padding: 1rem 4rem 1rem 2rem;
   background-color: #fff;
