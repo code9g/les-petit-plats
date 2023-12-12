@@ -1,7 +1,7 @@
 export function tagTemplate(target, key, text, callback) {
   const result = document.createElement("div");
-  result.className = "tag-selected";
-  result.classList.add(target.slice(0, -8) + "-tag");
+  result.className = "tag";
+  result.classList.add(target.slice(0, -8));
   result.dataset.target = target;
   result.dataset.key = key;
 

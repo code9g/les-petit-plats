@@ -217,6 +217,7 @@ function createLiveSearch(
 class App {
   constructor() {
     this.currentDropdown = null;
+    this.recipes = null;
   }
 
   handleOpen(dropdown) {
@@ -233,39 +234,162 @@ class App {
   }
 
   handleSelect(dropdown, item) {
-    const tags = document.querySelector("#tags-selected");
-    const tag = tagTemplate(
+    this.addTag(
       dropdown.id,
       item.dataset.key,
-      item.querySelector(".btn-select").textContent,
-      (e) => {
-        e.preventDefault();
-        item.classList.remove("selected");
-        e.currentTarget.closest(".tag-selected").remove();
-      }
+      item.querySelector(".btn-select").textContent
     );
-    tags.appendChild(tag);
     dropdown.close();
   }
 
   handleUnSelect(dropdown, item) {
-    const tags = document.querySelector("#tags-selected");
-    for (const tag of tags.childNodes) {
+    const tagList = this.tags.querySelectorAll(".tag");
+    for (const tag of tagList) {
       if (
         tag.dataset.target === dropdown.id &&
         tag.dataset.key === item.dataset.key
       ) {
         tag.remove();
+        break;
       }
+    }
+    if (!this.tags.querySelector(".tag")) {
+      this.tags.classList.add("hidden");
     }
     dropdown.close();
   }
 
-  async load() {}
+  addTag(target, key, text) {
+    const tag = tagTemplate(target, key, text, (e) => {
+      e.preventDefault();
+      this.removeTag(e.currentTarget.closest(".tag"));
+    });
+    this.tags.appendChild(tag);
+    this.tags.classList.remove("hidden");
+  }
 
-  async prepare() {}
+  removeTag(element) {
+    const dropdown = document.querySelector("#" + element.dataset.target);
+    const li = dropdown.querySelector(
+      `li[data-key="${element.dataset.key}"].selected`
+    );
+    li.classList.remove("selected");
+    element.remove();
+    console.log(this.tags.querySelector(".tag"));
+    if (!this.tags.querySelector(".tag")) {
+      this.tags.classList.add("hidden");
+    }
+  }
+
+  // async load() {
+  //   return await fetch("data/recipes.json").then((res) => res.json());
+  // }
+
+  // prepare(recipes) {
+  //   const setUstensils = new Set();
+  //   const setAppliances = new Set();
+
+  //   const ingredients = [];
+
+  //   let lastIngredientId = 0;
+  //   let lastApplianceId = 0;
+  //   let lastUstensilId = 0;
+
+  //   for (const recipe of recipes) {
+  //     recipe.visibility = false;
+  //     recipe.setVisibility = function (value) {
+  //       this.visibility = value;
+  //       if (value) {
+  //         for (const item of this.ingredients) {
+  //           item.ingredient.counter++;
+  //         }
+  //         this.appliance.counter++;
+  //         for (const ustensil of this.ustensils) {
+  //           ustensil.counter++;
+  //         }
+  //       } else {
+  //         for (const item of this.ingredients) {
+  //           item.ingredient.counter--;
+  //         }
+  //         this.appliance.counter--;
+  //         for (const ustensil of this.ustensils) {
+  //           ustensil.counter--;
+  //         }
+  //       }
+  //     };
+
+  //     for (const ingredient of recipe.ingredients) {
+  //       const name = ingredient.ingredient.trim().toCapitalize();
+  //       const search = replaceDiacritic(name).toLowerCase();
+
+  //       let find = ingredients.find((item) => {
+  //         return item.search === search;
+  //       });
+
+  //       if (!find) {
+  //         find = {
+  //           id: ++lastIngredientId,
+  //           name: name,
+  //           search: search,
+  //           counter: 0,
+  //           recipes: [],
+  //           get visibility() {
+  //             return this.counter === 0;
+  //           },
+  //         };
+  //         ingredients.push(find);
+  //       }
+  //       find.counter++;
+  //       console.log(find.visibility);
+  //       ingredient.ingredient = find;
+  //     }
+
+  //     const name = recipe.appliance.trim().toCapitalize();
+  //     const search = replaceDiacritic(name).toLowerCase();
+  //     if (!setAppliances.has(search)) {
+  //       const newAppliance = {
+  //         id: ++lastApplianceId,
+  //         name: name,
+  //         search: search,
+  //       };
+  //       setAppliances.add(search);
+  //       appliances.push(newAppliance);
+  //       recipe.appliance = newAppliance;
+  //     }
+
+  //     for (let i = 0; i < recipe.ustensils.length; i++) {
+  //       const name = recipe.ustensils[i];
+  //       const search = replaceDiacritic(name).toLowerCase;
+  //       if (!setUstensils.has(search)) {
+  //         const newUstensil = {
+  //           id: ++lastUstensilId,
+  //           name: name,
+  //           search: search,
+  //         };
+  //         setUstensils.add(search);
+  //         ustensils.push(newUstensil);
+  //         recipe.ustensils[i] = newUstensil;
+  //       }
+  //     }
+  //   }
+
+  //   const fnSort = (item1, item2) => item1.name.localeCompare(item2.name);
+
+  //   // ingredients.sort(fnSort);
+
+  //   // appliances.sort(fnSort);
+
+  //   // ustensils.sort(fnSort);
+
+  //   recipes.sort(fnSort);
+  //   console.log(recipes, ingredients);
+  // }
+
+  // filter() {}
 
   async run() {
+    // const data = await this.load();
+    // this.prepare(data);
     const filter1 = createLiveSearch(
       "ingredients",
       "Ingrédients",
@@ -299,6 +423,8 @@ class App {
     filters.append(filter1);
     filters.append(filter2);
     filters.append(filter3);
+
+    this.tags = document.querySelector("#tags .container");
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
     document.addEventListener("click", handleClick);

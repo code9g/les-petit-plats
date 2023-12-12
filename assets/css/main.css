@@ -164,16 +164,13 @@ h1 {
 #filters .container .dropdown .dropdown-button {
   width: 100%;
 }
-
-#ingredients-filter {
+#filters #ingredients-filter {
   --selected-bg-color: #ffd15b;
 }
-
-#appliances-filter {
+#filters #appliances-filter {
   --selected-bg-color: #ffd15b;
 }
-
-#ustensils-filter {
+#filters #ustensils-filter {
   --selected-bg-color: #ffd15b;
 }
 
@@ -221,31 +218,35 @@ h1 {
   -webkit-box-orient: vertical;
 }
 
-.tags-selected {
+#tags .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 1em;
-  font-size: 1.4rem;
+  gap: 1.25em;
+  justify-content: flex-start;
+  padding: 4rem 102px;
+  padding-top: 0;
 }
-.tags-selected .tag-selected {
+#tags .container.hidden {
+  display: none;
+}
+#tags .tag {
   display: flex;
   gap: 2em;
   justify-content: space-between;
   align-items: center;
   padding: 1.25em;
   border-radius: 0.7em;
-  min-width: 140px;
 }
-.tags-selected .ingredient-tag {
+#tags .ingredient {
   background-color: #ffd15b;
 }
-.tags-selected .appliance-tag {
+#tags .appliance {
   background-color: #ffd15b;
 }
-.tags-selected .ustensil-tag {
+#tags .ustensil {
   background-color: #ffd15b;
 }
-.tags-selected .btn-clear {
+#tags .btn-clear {
   border: none;
   outline: none;
   background: no-repeat center/contain url(../img/close-black.svg) transparent;

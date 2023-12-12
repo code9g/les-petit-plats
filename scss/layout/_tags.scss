@@ -1,31 +1,37 @@
-.tags-selected {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
+#tags {
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25em;
+    justify-content: flex-start;
 
-  font-size: 1.4rem;
+    padding: 4rem 102px;
+    padding-top: 0;
 
-  .tag-selected {
+    &.hidden {
+      display: none;
+    }
+  }
+
+  .tag {
     display: flex;
     gap: 2em;
     justify-content: space-between;
     align-items: center;
 
-    //background-color: #ffd15b;
     padding: 1.25em;
     border-radius: 0.7em;
-    min-width: 140px;
   }
 
-  .ingredient-tag {
+  .ingredient {
     background-color: $ingredient-color;
   }
 
-  .appliance-tag {
+  .appliance {
     background-color: $appliance-color;
   }
 
-  .ustensil-tag {
+  .ustensil {
     background-color: $ustensil-color;
   }
 

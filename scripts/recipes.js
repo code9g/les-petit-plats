@@ -1,3 +1,5 @@
+import {} from "./utils/tools.js";
+
 export const recipes = [
   {
     id: 1,
@@ -1834,17 +1836,13 @@ const setIngredients = new Set();
 const setUstensils = new Set();
 const setAppliances = new Set();
 
-function capitalize(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
 for (const recipe of recipes) {
   for (const ingredient of recipe.ingredients) {
-    setIngredients.add(capitalize(ingredient.ingredient));
+    setIngredients.add(ingredient.ingredient.toCapitalize());
   }
-  setAppliances.add(capitalize(recipe.appliance));
+  setAppliances.add(recipe.appliance.toCapitalize());
   for (const ustensil of recipe.ustensils) {
-    setUstensils.add(capitalize(ustensil));
+    setUstensils.add(ustensil.toCapitalize());
   }
 }
 

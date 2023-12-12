@@ -1,6 +1,6 @@
 export function recipeCardTemplate(recipe) {
   const card = document.createElement("article");
-  card.className = "card";
+  card.className = "card recipe";
   card.dataset.id = recipe.id;
 
   const img = document.createElement("img");
@@ -30,6 +30,7 @@ export function recipeCardTemplate(recipe) {
 
   const divb = document.createElement("div");
   divb.className = "ingredients";
+
   for (const ingredient of recipe.ingredients) {
     const divi = document.createElement("div");
     divi.className = "ingredient";

@@ -1,44 +1,46 @@
-#filters .container {
-  display: flex;
-  justify-content: space-between;
-
-  padding: 4rem 102px;
-
-  .filters {
+#filters {
+  .container {
     display: flex;
-    flex-flow: row nowrap;
-    gap: 2rem;
-    padding-right: 102px;
-  }
+    justify-content: space-between;
 
-  .results {
-    display: flex;
-    align-items: center;
+    padding: 4rem 102px;
 
-    font-family: $font-family-title;
-    font-size: 2.1rem;
-    font-weight: 400;
-    color: #1b1b1b;
-  }
+    .filters {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 2rem;
+      padding-right: 102px;
+    }
 
-  .dropdown {
-    min-width: 20rem;
-    width: max-content;
+    .results {
+      display: flex;
+      align-items: center;
 
-    .dropdown-button {
-      width: 100%;
+      font-family: $font-family-title;
+      font-size: 2.1rem;
+      font-weight: 400;
+      color: #1b1b1b;
+    }
+
+    .dropdown {
+      min-width: 20rem;
+      width: max-content;
+
+      .dropdown-button {
+        width: 100%;
+      }
     }
   }
-}
 
-#ingredients-filter {
-  --selected-bg-color: #{$ingredient-color};
-}
+  #ingredients-filter {
+    --selected-bg-color: #{$ingredient-color};
+  }
 
-#appliances-filter {
-  --selected-bg-color: #{$appliance-color};
-}
+  #appliances-filter {
+    --selected-bg-color: #{$appliance-color};
+  }
 
-#ustensils-filter {
-  --selected-bg-color: #{$ustensil-color};
+  #ustensils-filter {
+    --selected-bg-color: #{$ustensil-color};
+  }
 }
