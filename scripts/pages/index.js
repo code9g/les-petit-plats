@@ -34,19 +34,6 @@ function clearInput(element, dispatch = true) {
   }
 }
 
-function handleClick(e) {
-  const opened = document.querySelectorAll(".dropdown.open");
-  const target = e.target;
-  const excepted =
-    target.classList.contains("dropdown") || target.closest(".dropdown");
-
-  opened.forEach((dropdown) => {
-    if (dropdown !== excepted) {
-      dropdown.close();
-    }
-  });
-}
-
 const mutaterOpen = {
   enumerable: true,
   configurable: true,
@@ -221,16 +208,7 @@ class App {
   }
 
   handleOpen(dropdown) {
-    this.currentDropdown = dropdown;
     clearInput(dropdown.querySelector(".input-search"));
-    console.log("Open: ", dropdown.id);
-  }
-
-  handleClose(dropdown) {
-    if (this.currentDropdown === dropdown) {
-      this.currentDropdown = null;
-    }
-    console.log("Close: ", dropdown.id);
   }
 
   handleSelect(dropdown, item) {
@@ -243,19 +221,11 @@ class App {
   }
 
   handleUnSelect(dropdown, item) {
-    const tagList = this.tags.querySelectorAll(".tag");
-    for (const tag of tagList) {
-      if (
-        tag.dataset.target === dropdown.id &&
-        tag.dataset.key === item.dataset.key
-      ) {
-        tag.remove();
-        break;
-      }
-    }
-    if (!this.tags.querySelector(".tag")) {
-      this.tags.classList.add("hidden");
-    }
+    this.removeTag(
+      this.tags.querySelector(
+        `.tag[data-target="${dropdown.id}"][data-key="${item.dataset.key}"]`
+      )
+    );
     dropdown.close();
   }
 
@@ -264,140 +234,48 @@ class App {
       e.preventDefault();
       this.removeTag(e.currentTarget.closest(".tag"));
     });
+    document
+      .querySelector(`#${target} li[data-key="${key}"]:not(.selected)`)
+      ?.classList.add("selected");
     this.tags.appendChild(tag);
     this.tags.classList.remove("hidden");
+    this.updateSearch();
   }
 
   removeTag(element) {
-    const dropdown = document.querySelector("#" + element.dataset.target);
-    const li = dropdown.querySelector(
-      `li[data-key="${element.dataset.key}"].selected`
-    );
-    li.classList.remove("selected");
+    document
+      .querySelector(
+        `#${element.dataset.target} li[data-key="${element.dataset.key}"].selected`
+      )
+      ?.classList.remove("selected");
     element.remove();
-    console.log(this.tags.querySelector(".tag"));
     if (!this.tags.querySelector(".tag")) {
       this.tags.classList.add("hidden");
     }
+    this.updateSearch();
   }
 
-  // async load() {
-  //   return await fetch("data/recipes.json").then((res) => res.json());
-  // }
+  handleClick(e) {
+    const opened = document.querySelectorAll(".dropdown.open");
+    const target = e.target;
+    const excepted =
+      target.classList.contains("dropdown") || target.closest(".dropdown");
 
-  // prepare(recipes) {
-  //   const setUstensils = new Set();
-  //   const setAppliances = new Set();
-
-  //   const ingredients = [];
-
-  //   let lastIngredientId = 0;
-  //   let lastApplianceId = 0;
-  //   let lastUstensilId = 0;
-
-  //   for (const recipe of recipes) {
-  //     recipe.visibility = false;
-  //     recipe.setVisibility = function (value) {
-  //       this.visibility = value;
-  //       if (value) {
-  //         for (const item of this.ingredients) {
-  //           item.ingredient.counter++;
-  //         }
-  //         this.appliance.counter++;
-  //         for (const ustensil of this.ustensils) {
-  //           ustensil.counter++;
-  //         }
-  //       } else {
-  //         for (const item of this.ingredients) {
-  //           item.ingredient.counter--;
-  //         }
-  //         this.appliance.counter--;
-  //         for (const ustensil of this.ustensils) {
-  //           ustensil.counter--;
-  //         }
-  //       }
-  //     };
-
-  //     for (const ingredient of recipe.ingredients) {
-  //       const name = ingredient.ingredient.trim().toCapitalize();
-  //       const search = replaceDiacritic(name).toLowerCase();
-
-  //       let find = ingredients.find((item) => {
-  //         return item.search === search;
-  //       });
-
-  //       if (!find) {
-  //         find = {
-  //           id: ++lastIngredientId,
-  //           name: name,
-  //           search: search,
-  //           counter: 0,
-  //           recipes: [],
-  //           get visibility() {
-  //             return this.counter === 0;
-  //           },
-  //         };
-  //         ingredients.push(find);
-  //       }
-  //       find.counter++;
-  //       console.log(find.visibility);
-  //       ingredient.ingredient = find;
-  //     }
-
-  //     const name = recipe.appliance.trim().toCapitalize();
-  //     const search = replaceDiacritic(name).toLowerCase();
-  //     if (!setAppliances.has(search)) {
-  //       const newAppliance = {
-  //         id: ++lastApplianceId,
-  //         name: name,
-  //         search: search,
-  //       };
-  //       setAppliances.add(search);
-  //       appliances.push(newAppliance);
-  //       recipe.appliance = newAppliance;
-  //     }
-
-  //     for (let i = 0; i < recipe.ustensils.length; i++) {
-  //       const name = recipe.ustensils[i];
-  //       const search = replaceDiacritic(name).toLowerCase;
-  //       if (!setUstensils.has(search)) {
-  //         const newUstensil = {
-  //           id: ++lastUstensilId,
-  //           name: name,
-  //           search: search,
-  //         };
-  //         setUstensils.add(search);
-  //         ustensils.push(newUstensil);
-  //         recipe.ustensils[i] = newUstensil;
-  //       }
-  //     }
-  //   }
-
-  //   const fnSort = (item1, item2) => item1.name.localeCompare(item2.name);
-
-  //   // ingredients.sort(fnSort);
-
-  //   // appliances.sort(fnSort);
-
-  //   // ustensils.sort(fnSort);
-
-  //   recipes.sort(fnSort);
-  //   console.log(recipes, ingredients);
-  // }
-
-  // filter() {}
+    opened.forEach((dropdown) => {
+      if (dropdown !== excepted) {
+        dropdown.close();
+      }
+    });
+  }
 
   async run() {
-    // const data = await this.load();
-    // this.prepare(data);
     const filter1 = createLiveSearch(
       "ingredients",
       "Ingrédients",
       ingredients,
       this.handleSelect.bind(this),
       this.handleUnSelect.bind(this),
-      this.handleOpen.bind(this),
-      this.handleClose.bind(this)
+      this.handleOpen.bind(this)
     );
     const filter2 = createLiveSearch(
       "appliances",
@@ -405,8 +283,7 @@ class App {
       appliances,
       this.handleSelect.bind(this),
       this.handleUnSelect.bind(this),
-      this.handleOpen.bind(this),
-      this.handleClose.bind(this)
+      this.handleOpen.bind(this)
     );
     const filter3 = createLiveSearch(
       "ustensils",
@@ -414,8 +291,7 @@ class App {
       ustensils,
       this.handleSelect.bind(this),
       this.handleUnSelect.bind(this),
-      this.handleOpen.bind(this),
-      this.handleClose.bind(this)
+      this.handleOpen.bind(this)
     );
 
     const filters = document.querySelector(".filters");
@@ -427,15 +303,42 @@ class App {
     this.tags = document.querySelector("#tags .container");
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
-    document.addEventListener("click", handleClick);
+    document.addEventListener("click", this.handleClick.bind(this));
 
     const wrapper = document.querySelector(".recipes .cards");
     for (const recipe of recipes) {
       wrapper.appendChild(recipeCardTemplate(recipe));
     }
+
+    const inputSearch = document.querySelector("#search");
+    inputSearch.addEventListener("input", (e) => {
+      e.preventDefault();
+      if (inputSearch.value.length > 2) {
+        this.updateSearch();
+      }
+    });
+
+    document
+      .querySelector("form[name=search] .btn-search")
+      .addEventListener("click", (e) => {
+        e.preventDefault();
+        this.updateSearch();
+      });
+
+    document
+      .querySelector("form[name=search] .btn-clear")
+      .addEventListener("click", (e) => {
+        e.preventDefault();
+        const laucnSearch = inputSearch.value.length > 2;
+        inputSearch.value = "";
+        if (laucnSearch) {
+          this.updateSearch();
+        }
+      });
   }
 
   updateSearch() {
+    console.log("Update search started !");
     const search = "";
     // Récuperer le texte de la recherche principale
     // Récuperer les tags choisies
