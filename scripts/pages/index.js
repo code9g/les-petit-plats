@@ -312,6 +312,9 @@ class App {
     for (const recipe of recipes) {
       wrapper.appendChild(recipeCardTemplate(recipe));
     }
+    document.querySelectorAll(".results").forEach((element) => {
+      element.textContent = `${recipes.length} recette(s)`;
+    });
 
     const inputSearch = document.querySelector("#search");
     inputSearch.addEventListener("input", (e) => {
