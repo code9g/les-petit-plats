@@ -2,7 +2,7 @@ import { recipes, ingredients, ustensils, appliances } from "../recipes.js";
 import { dropdownFilterTemplate } from "../templates/dropdownFilter.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
 import { tagTemplate } from "../templates/tag.js";
-import { clearInput, escapeRegex, replaceDiacritic } from "../utils/tools.js";
+import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 class App {
   constructor() {
@@ -10,11 +10,7 @@ class App {
   }
 
   handleSelect(dropdown, item) {
-    this.addTag(
-      dropdown.id,
-      item.dataset.key,
-      item.querySelector(".btn-select").textContent
-    );
+    this.addTag(dropdown.id, item.dataset.key, item.textContent);
     dropdown.close();
   }
 
@@ -54,12 +50,11 @@ class App {
   }
 
   handleClick(e) {
-    const opened = document.querySelectorAll(".dropdown.open");
     const target = e.target;
     const excepted =
       target.classList.contains("dropdown") || target.closest(".dropdown");
 
-    opened.forEach((dropdown) => {
+    document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
       if (dropdown !== excepted) {
         dropdown.close();
       }
