@@ -169,6 +169,9 @@ h1 {
   width: 18.8rem;
 }
 
+.recipes .container {
+  padding-bottom: 4rem;
+}
 .recipes .badge {
   top: 21px;
   right: 21px;
