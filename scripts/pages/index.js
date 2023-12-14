@@ -7,6 +7,7 @@ import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 class App {
   constructor() {
     this.recipes = null;
+    this.filtered = false;
   }
 
   handleSelect(dropdown, item) {
@@ -106,31 +107,37 @@ class App {
       element.textContent = `${recipes.length} recette(s)`;
     });
 
-    const inputSearch = document.querySelector("#search");
-    inputSearch.addEventListener("input", (e) => {
+    const form = document.querySelector("form[name=search]");
+
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (inputSearch.value.length > 2) {
-        this.updateSearch();
-      }
+      clearTimeout(h);
+      this.updateSearch();
     });
 
-    document
-      .querySelector("form[name=search] .btn-search")
-      .addEventListener("click", (e) => {
-        e.preventDefault();
-        this.updateSearch();
-      });
-
-    document
-      .querySelector("form[name=search] .btn-clear")
-      .addEventListener("click", (e) => {
-        e.preventDefault();
-        const laucnSearch = inputSearch.value.length > 2;
-        inputSearch.value = "";
-        if (laucnSearch) {
+    const inputSearch = document.querySelector("input.input-search");
+    const KEY_TIMEOUT = 500;
+    let h = null;
+    inputSearch.addEventListener("input", (e) => {
+      e.preventDefault();
+      clearTimeout(h);
+      h = setTimeout((e) => {
+        if (inputSearch.value.length >= inputSearch.minLength) {
           this.updateSearch();
+        } else if (this.filtered) {
+          // ...
         }
-      });
+      }, KEY_TIMEOUT);
+    });
+    form.querySelector(".btn-clear").addEventListener("click", (e) => {
+      e.preventDefault();
+      clearTimeout(h);
+      inputSearch.value = "";
+      inputSearch.focus();
+      h = setTimeout(() => {
+        this.updateSearch();
+      }, KEY_TIMEOUT);
+    });
   }
 
   updateSearch() {

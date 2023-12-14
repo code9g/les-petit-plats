@@ -101,13 +101,25 @@ export function dropdownFilterTemplate(
   result.appendChild(content);
 
   result.show = function () {
-    if (!this.classList.contains("open")) {
+    if (!this.isOpen()) {
       clearInput(input);
       this.classList.add("open");
       ul.scrollTop = 0;
       requestAnimationFrame(() => {
         input.focus();
       });
+    }
+  };
+
+  result.isOpen = function () {
+    return this.classList.contains("open");
+  };
+
+  result.toggle = function () {
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.show();
     }
   };
 
@@ -136,28 +148,23 @@ export function dropdownFilterTemplate(
     let counter = 0;
     ul.querySelectorAll(".dropdown-item").forEach((li) => {
       if (re.exec(li.dataset.search)) {
-        li.classList.remove("hidden");
+        li.classList.remove("filtered");
         counter++;
       } else {
-        li.classList.add("hidden");
+        li.classList.add("filtered");
       }
     });
 
-    const last = ul.querySelector(".dropdown-empty");
     if (counter === 0) {
-      last.classList.remove("hidden");
+      liEmpty.classList.remove("hidden");
     } else {
-      last.classList.add("hidden");
+      liEmpty.classList.add("hidden");
     }
   });
 
   button.addEventListener("click", (e) => {
     e.preventDefault();
-    if (result.classList.contains("open")) {
-      result.close();
-    } else {
-      result.show();
-    }
+    result.toggle();
   });
 
   reset.addEventListener("click", (e) => {
