@@ -207,7 +207,6 @@ class App {
     let i = 0;
     const n = cards.length;
     recipes.forEach((recipe) => {
-      console.log(recipe.card);
       if (!appliances.includes(recipe.appliance)) {
         appliances.push(recipe.appliance);
       }
