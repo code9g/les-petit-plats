@@ -1,7 +1,12 @@
-import { dropdownFilterTemplate } from "../templates/dropdownFilter.js";
+import {
+  dropdownFilterTemplate,
+  updateFilter,
+} from "../templates/dropdownFilter.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
 import { tagTemplate } from "../templates/tag.js";
 import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
+
+const KEY_TIMEOUT = 300;
 
 class App {
   constructor() {
@@ -65,6 +70,7 @@ class App {
 
   async load(url) {
     this.recipes = await fetch(url).then((res) => res.json());
+    this.wholes = new Set(["de", "au", "aux", "le", "la", "les"]);
   }
 
   prepare() {
@@ -102,6 +108,10 @@ class App {
     });
   }
 
+  render() {
+    // ...
+  }
+
   async run() {
     // Chargement des données
     await this.load("./data/recipes.json");
@@ -110,21 +120,21 @@ class App {
     this.prepare();
 
     // Mise en place du DOM
-    const filter1 = dropdownFilterTemplate(
+    this.ingredientDropdownList = dropdownFilterTemplate(
       "ingredients",
       "Ingrédients",
       this.ingredients,
       this.handleSelect.bind(this),
       this.handleUnSelect.bind(this)
     );
-    const filter2 = dropdownFilterTemplate(
+    this.applianceDropdownList = dropdownFilterTemplate(
       "appliances",
       "Appareils",
       this.appliances,
       this.handleSelect.bind(this),
       this.handleUnSelect.bind(this)
     );
-    const filter3 = dropdownFilterTemplate(
+    this.ustensilDropdownList = dropdownFilterTemplate(
       "ustensils",
       "Ustensiles",
       this.ustensils,
@@ -134,9 +144,9 @@ class App {
 
     const filters = document.querySelector(".filters");
 
-    filters.append(filter1);
-    filters.append(filter2);
-    filters.append(filter3);
+    filters.append(this.ingredientDropdownList);
+    filters.append(this.applianceDropdownList);
+    filters.append(this.ustensilDropdownList);
 
     this.tags = document.querySelector("#tags .container");
 
@@ -160,7 +170,7 @@ class App {
     });
 
     const inputSearch = document.querySelector("input.input-search");
-    const KEY_TIMEOUT = 500;
+
     let h = null;
     inputSearch.addEventListener("input", (e) => {
       e.preventDefault();
@@ -184,6 +194,16 @@ class App {
     this.updateRecipeCounter(this.recipes.length);
   }
 
+  queryTagAll(target) {
+    return Array.from(this.tags.querySelectorAll(target)).map(
+      (item) => item.textContent
+    );
+  }
+
+  get search() {
+    return document.querySelector("form[name=search] .input-search").value;
+  }
+
   updateSearch() {
     const ingredients = [];
     const appliances = [];
@@ -191,16 +211,10 @@ class App {
 
     const recipes = this.filter(
       this.recipes,
-      document.querySelector("form[name=search] .input-search").value,
-      Array.from(this.tags.querySelectorAll(".ingredient")).map(
-        (item) => item.textContent
-      ),
-      Array.from(this.tags.querySelectorAll(".appliance")).map(
-        (item) => item.textContent
-      ),
-      Array.from(this.tags.querySelectorAll(".ustensil")).map(
-        (item) => item.textContent
-      )
+      this.search,
+      this.queryTagAll(".ingredient"),
+      this.queryTagAll(".appliance"),
+      this.queryTagAll(".ustensil")
     );
 
     const cards = document.querySelectorAll(".recipe");
@@ -234,28 +248,19 @@ class App {
       cards[i++].classList.add("hidden");
     }
 
-    const updateFilter = (target, list) => {
-      document
-        .querySelectorAll(target + " .dropdown-item")
-        .forEach((element) => {
-          if (list.includes(element.textContent)) {
-            element.classList.remove("hidden");
-          } else {
-            element.classList.add("hidden");
-          }
-        });
-    };
-
-    updateFilter("#ingredients-filter", ingredients);
-    updateFilter("#appliances-filter", appliances);
-    updateFilter("#ustensils-filter", ustensils);
+    updateFilter(this.ingredientDropdownList, ingredients);
+    updateFilter(this.applianceDropdownList, appliances);
+    updateFilter(this.ustensilDropdownList, ustensils);
 
     this.updateRecipeCounter(recipes.length);
   }
 
   filter(recipes, search, ingredients, appliances, ustensils) {
-    const re = new RegExp(escapeRegex(search), "i");
-
+    const words = search
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 2 && !this.wholes.has(word))
+      .map((word) => escapeRegex(replaceDiacritic(word)));
     return recipes.filter((recipe) => {
       // Filtre sur les ingrédients
       if (
@@ -277,12 +282,18 @@ class App {
       ) {
         return false;
       }
-      return (
-        search === "" ||
-        re.exec(recipe.name) ||
-        re.exec(recipe.description) ||
-        recipe.ingredients.find((item) => re.exec(item.ingredient))
-      );
+      if (words.length === 0) {
+        return true;
+      }
+      // ... exclude whole word ... ?
+      return words.some((word) => {
+        const re = new RegExp(word, "i");
+        return (
+          re.exec(recipe.name) ||
+          re.exec(recipe.description) ||
+          recipe.ingredients.find((item) => re.exec(item.ingredient))
+        );
+      });
     });
   }
 
