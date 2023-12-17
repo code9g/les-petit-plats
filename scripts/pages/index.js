@@ -2,6 +2,8 @@ import {
   dropdownFilterTemplate,
   updateFilter,
 } from "../templates/dropdownFilter.js";
+import { headerTemplate } from "../templates/header.js";
+import { mainTemplate } from "../templates/main.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
 import { tagTemplate } from "../templates/tag.js";
 import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
@@ -119,6 +121,11 @@ class App {
     // Préparation et normalisation des données
     this.prepare();
 
+    const body = document.querySelector(".wrapper");
+
+    body.appendChild(headerTemplate());
+    body.appendChild(mainTemplate());
+
     // Mise en place du DOM
     this.ingredientDropdownList = dropdownFilterTemplate(
       "ingredients",
@@ -144,20 +151,20 @@ class App {
 
     const filters = document.querySelector(".filters");
 
-    filters.append(this.ingredientDropdownList);
-    filters.append(this.applianceDropdownList);
-    filters.append(this.ustensilDropdownList);
+    filters.appendChild(this.ingredientDropdownList);
+    filters.appendChild(this.applianceDropdownList);
+    filters.appendChild(this.ustensilDropdownList);
 
     this.tags = document.querySelector("#tags .container");
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
     document.addEventListener("click", this.handleClick.bind(this));
 
-    const wrapper = document.querySelector(".recipes .cards");
+    const cards = document.querySelector("#recipes .cards");
     for (const recipe of this.recipes) {
       const card = recipeCardTemplate(recipe);
       recipe.card = card;
-      wrapper.appendChild(card);
+      cards.appendChild(card);
     }
 
     const form = document.querySelector("form[name=search]");
@@ -303,7 +310,4 @@ class App {
 }
 
 const app = new App();
-
-document.addEventListener("DOMContentLoaded", () => {
-  app.run();
-});
+app.run();

@@ -169,43 +169,43 @@ h1 {
   width: 18.8rem;
 }
 
-.recipes .container {
+#recipes .container {
   padding-bottom: 4rem;
 }
-.recipes .badge {
+#recipes .badge {
   top: 21px;
   right: 21px;
 }
-.recipes .ingredients {
+#recipes .ingredients {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 21px;
 }
-.recipes .ingredient {
+#recipes .ingredient {
   flex: 1 0 calc(50% - 21px);
 }
-.recipes .ingredient .name {
+#recipes .ingredient .name {
   font-size: 1.4rem;
   color: #1b1b1b;
   font-weight: 500;
 }
-.recipes .ingredient .quantity {
+#recipes .ingredient .quantity {
   font-size: 1.4rem;
   font-weight: 400;
   color: #7a7a7a;
 }
-.recipes .title {
+#recipes .title {
   margin-bottom: 3.2rem;
 }
-.recipes h3 {
+#recipes h3 {
   font-size: 1.2rem;
   color: #7a7a7a;
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
-.recipes .description {
+#recipes .description {
   color: #1b1b1b;
   font-size: 1.4rem;
   font-weight: 400;

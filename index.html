@@ -9,46 +9,8 @@
 </head>
 
 <body>
-    <header class="l-header">
-        <div class="container">
-            <div class="header-top">
-                <a class="brand" href="." aria-current="page">
-                    <img src="assets/img/logo.png" alt="Logo Les petits plats">
-                </a>
-            </div>
-            <div class="header-content">
-                <h1 class="title">Cherchez parmi plus de 1500 recettes du quotiden, simples et délicieuses
-                </h1>
-                <form name="search" class="form-search" action="." method="get">
-                    <input id="search" type="text" name="search" class="input-search" minlength="2"
-                        placeholder="Rechercher une recette, un ingrédient, ...">
-                    <button class="btn-clear" type="reset"><span class="sr-only">Vider</span></button>
-                    <button class="btn-search" type="submit"><span class="sr-only">Rechercher</span></button>
-                </form>
-            </div>
-        </div>
-    </header>
-    <main class="l-main">
-        <section id="filters">
-            <div class="container">
-                <div class="filters">
-
-                </div>
-                <div class="results">
-                    1500 recettes
-                </div>
-            </div>
-        </section>
-        <section id="tags">
-            <div class="container hidden">
-            </div>
-        </section>
-        <section class="recipes">
-            <div class="container cards">
-            </div>
-        </section>
-    </main>
-    <script type="module" src="scripts/pages/index.js"></script>
+    <div class="wrapper"></div>
+    <script type="module" src="scripts/pages/index.js" defer></script>
 </body>
 
 </html>
