@@ -10,12 +10,16 @@ import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
 
-function prepareWords(text) {
+function prepareWords(text, wholes = [], limit = 2) {
   return text
     .trim()
     .split(/\s+/)
-    .filter((word) => word.length > 2 && !this.wholes.has(word))
-    .map((word) => escapeRegex(replaceDiacritic(word)));
+    .reduce((accumulator, word) => {
+      if (word.length > limit && !wholes.has(word)) {
+        accumulator.push(escapeRegex(replaceDiacritic(word)));
+      }
+      return accumulator;
+    }, []);
 }
 
 function filterOne(recipe, words, ingredients, appliances, ustensils) {
@@ -43,8 +47,15 @@ function filterOne(recipe, words, ingredients, appliances, ustensils) {
   );
 }
 
-function filterAll(recipes, search, ingredients, appliances, ustensils) {
-  const words = prepareWords(search);
+function filterAll(
+  recipes,
+  search,
+  ingredients,
+  appliances,
+  ustensils,
+  wholes = []
+) {
+  const words = prepareWords(search, wholes);
   return recipes.filter((recipe) =>
     filterOne(recipe, words, ingredients, appliances, ustensils)
   );
@@ -201,6 +212,7 @@ class App {
     filters.appendChild(this.ustensilDropdownList);
 
     this.tags = document.querySelector("#tags .container");
+    this.recipeCounter = document.querySelector(".results");
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
     document.addEventListener("click", this.handleClick.bind(this));
@@ -211,22 +223,22 @@ class App {
       recipe.card = card;
       cards.appendChild(card);
     }
+    this.updateRecipeCounter(this.recipes.length);
 
     const form = document.querySelector("form[name=search]");
     this.search = form.querySelector("input.input-search");
     let h = null;
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      clearTimeout(h);
-      this.updateSearch();
-    });
-
+    let inputTrigger = false;
     this.search.addEventListener("input", (e) => {
       e.preventDefault();
       clearTimeout(h);
       h = setTimeout(() => {
         if (this.search.value.length >= this.search.minLength) {
+          inputTrigger = true;
+          this.updateSearch();
+        } else if (inputTrigger) {
+          inputTrigger = false;
           this.updateSearch();
         }
       }, KEY_TIMEOUT);
@@ -242,7 +254,11 @@ class App {
       }, KEY_TIMEOUT);
     });
 
-    this.updateRecipeCounter(this.recipes.length);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      clearTimeout(h);
+      this.updateSearch();
+    });
   }
 
   queryTagAll(target) {
@@ -256,13 +272,16 @@ class App {
     const appliances = [];
     const ustensils = [];
 
-    const words = prepareWords(this.search.value);
+    const words = prepareWords(
+      this.search.value,
+      this.wholes,
+      this.search.minLength
+    );
     const fIngredients = this.queryTagAll(".ingredient");
     const fAppliances = this.queryTagAll(".appliance");
     const fUstensils = this.queryTagAll(".ustensil");
 
     let counter = 0;
-
     this.recipes.forEach((recipe) => {
       if (filterOne(recipe, words, fIngredients, fAppliances, fUstensils)) {
         recipe.ingredients.forEach((item) => {
@@ -284,13 +303,15 @@ class App {
         recipe.card.classList.add("hidden");
       }
     });
+    this.updateRecipeCounter(counter);
 
     // const recipes = filterAll(
     //   this.recipes,
     //   this.search.value,
     //   this.queryTagAll(".ingredient"),
     //   this.queryTagAll(".appliance"),
-    //   this.queryTagAll(".ustensil")
+    //   this.queryTagAll(".ustensil"),
+    //   this.wholes
     // );
 
     // const cards = document.querySelectorAll("#recipes .cards .recipe");
@@ -327,12 +348,10 @@ class App {
     updateFilter(this.ingredientDropdownList, ingredients);
     updateFilter(this.applianceDropdownList, appliances);
     updateFilter(this.ustensilDropdownList, ustensils);
-
-    this.updateRecipeCounter(counter);
   }
 
   updateRecipeCounter(value) {
-    document.querySelector(".results").textContent = `${value} recette(s)`;
+    this.recipeCounter.textContent = `${value} recette(s)`;
   }
 }
 
