@@ -10,6 +10,46 @@ import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
 
+function prepareWords(text) {
+  return text
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 2 && !this.wholes.has(word))
+    .map((word) => escapeRegex(replaceDiacritic(word)));
+}
+
+function filterOne(recipe, words, ingredients, appliances, ustensils) {
+  // Filtre sur les tags
+  if (
+    !ingredients.every((ingredient) =>
+      recipe.ingredients.find((item) => item.ingredient === ingredient)
+    ) ||
+    (appliances.length > 0 && !appliances.includes(recipe.appliance)) ||
+    !ustensils.every((ustensil) => recipe.ustensils.includes(ustensil))
+  ) {
+    return false;
+  }
+  // Filter sur les mots
+  return (
+    words.length === 0 ||
+    words.some((word) => {
+      const re = new RegExp(word, "i");
+      return (
+        re.exec(recipe.name) ||
+        re.exec(recipe.description) ||
+        recipe.ingredients.find((item) => re.exec(item.ingredient))
+      );
+    })
+  );
+}
+
+function filterAll(recipes, search, ingredients, appliances, ustensils) {
+  const words = prepareWords(search);
+  return recipes.filter((recipe) =>
+    filterOne(recipe, words, ingredients, appliances, ustensils)
+  );
+}
+
 class App {
   constructor() {
     this.recipes = null;
@@ -216,7 +256,7 @@ class App {
     const appliances = [];
     const ustensils = [];
 
-    const words = this.prepareWords(this.search.value);
+    const words = prepareWords(this.search.value);
     const fIngredients = this.queryTagAll(".ingredient");
     const fAppliances = this.queryTagAll(".appliance");
     const fUstensils = this.queryTagAll(".ustensil");
@@ -224,9 +264,7 @@ class App {
     let counter = 0;
 
     this.recipes.forEach((recipe) => {
-      if (
-        this.filterOne(recipe, words, fIngredients, fAppliances, fUstensils)
-      ) {
+      if (filterOne(recipe, words, fIngredients, fAppliances, fUstensils)) {
         recipe.ingredients.forEach((item) => {
           if (!ingredients.includes(item.ingredient)) {
             ingredients.push(item.ingredient);
@@ -247,7 +285,7 @@ class App {
       }
     });
 
-    // const recipes = this.filterAll(
+    // const recipes = filterAll(
     //   this.recipes,
     //   this.search.value,
     //   this.queryTagAll(".ingredient"),
@@ -291,45 +329,6 @@ class App {
     updateFilter(this.ustensilDropdownList, ustensils);
 
     this.updateRecipeCounter(counter);
-  }
-
-  static prepareWords(text) {
-    return (words = text
-      .trim()
-      .split(/\s+/)
-      .filter((word) => word.length > 2 && !this.wholes.has(word))
-      .map((word) => escapeRegex(replaceDiacritic(word))));
-  }
-
-  static filterOne(recipe, words, ingredients, appliances, ustensils) {
-    // Filtre sur les tags
-    if (
-      !ingredients.every((ingredient) =>
-        recipe.ingredients.find((item) => item.ingredient === ingredient)
-      ) ||
-      (appliances.length > 0 && !appliances.includes(recipe.appliance)) ||
-      !ustensils.every((ustensil) => recipe.ustensils.includes(ustensil))
-    ) {
-      return false;
-    }
-    return (
-      words.length === 0 ||
-      words.some((word) => {
-        const re = new RegExp(word, "i");
-        return (
-          re.exec(recipe.name) ||
-          re.exec(recipe.description) ||
-          recipe.ingredients.find((item) => re.exec(item.ingredient))
-        );
-      })
-    );
-  }
-
-  filterAll(recipes, search, ingredients, appliances, ustensils) {
-    const words = this.prepareWords(search);
-    return recipes.filter((recipe) =>
-      this.filterOne(recipe, words, ingredients, appliances, ustensils)
-    );
   }
 
   updateRecipeCounter(value) {
