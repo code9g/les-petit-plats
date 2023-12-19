@@ -84,6 +84,7 @@ class App {
       for (const item of recipe.ingredients) {
         const text = item.ingredient.toCapitalize();
         item.ingredient = text;
+        item.searchIngredient = replaceDiacritic(item.ingredient).toLowerCase();
         setIngredients.add(text);
       }
       setAppliances.add(recipe.appliance.toCapitalize());
@@ -92,6 +93,10 @@ class App {
         setUstensils.add(text);
         recipe.ustensils[i] = text;
       }
+      recipe.searchName = replaceDiacritic(recipe.name).toLowerCase();
+      recipe.searchDescription = replaceDiacritic(
+        recipe.description
+      ).toLowerCase();
     }
 
     const fnSort = (item1, item2) => item1.localeCompare(item2);
@@ -121,10 +126,10 @@ class App {
     // Préparation et normalisation des données
     this.prepare();
 
-    const body = document.querySelector(".wrapper");
+    const wrapper = document.querySelector(".wrapper");
 
-    body.appendChild(headerTemplate());
-    body.appendChild(mainTemplate());
+    wrapper.appendChild(headerTemplate());
+    wrapper.appendChild(mainTemplate());
 
     // Mise en place du DOM
     this.ingredientDropdownList = dropdownFilterTemplate(
@@ -168,31 +173,30 @@ class App {
     }
 
     const form = document.querySelector("form[name=search]");
+    this.search = form.querySelector("input.input-search");
+    let h = null;
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       clearTimeout(h);
-
       this.updateSearch();
     });
 
-    const inputSearch = document.querySelector("input.input-search");
-
-    let h = null;
-    inputSearch.addEventListener("input", (e) => {
+    this.search.addEventListener("input", (e) => {
       e.preventDefault();
       clearTimeout(h);
-      h = setTimeout((e) => {
-        if (inputSearch.value.length >= inputSearch.minLength) {
+      h = setTimeout(() => {
+        if (this.search.value.length >= this.search.minLength) {
           this.updateSearch();
         }
       }, KEY_TIMEOUT);
     });
+
     form.querySelector(".btn-clear").addEventListener("click", (e) => {
       e.preventDefault();
       clearTimeout(h);
-      inputSearch.value = "";
-      inputSearch.focus();
+      this.search.value = "";
+      this.search.focus();
       h = setTimeout(() => {
         this.updateSearch();
       }, KEY_TIMEOUT);
@@ -207,101 +211,125 @@ class App {
     );
   }
 
-  get search() {
-    return document.querySelector("form[name=search] .input-search").value;
-  }
-
   updateSearch() {
     const ingredients = [];
     const appliances = [];
     const ustensils = [];
 
-    const recipes = this.filter(
-      this.recipes,
-      this.search,
-      this.queryTagAll(".ingredient"),
-      this.queryTagAll(".appliance"),
-      this.queryTagAll(".ustensil")
-    );
+    const words = this.prepareWords(this.search.value);
+    const fIngredients = this.queryTagAll(".ingredient");
+    const fAppliances = this.queryTagAll(".appliance");
+    const fUstensils = this.queryTagAll(".ustensil");
 
-    const cards = document.querySelectorAll(".recipe");
-    let i = 0;
-    const n = cards.length;
-    recipes.forEach((recipe) => {
-      if (!appliances.includes(recipe.appliance)) {
-        appliances.push(recipe.appliance);
-      }
-      recipe.ingredients.forEach((ingredient) => {
-        if (!ingredients.includes(ingredient.ingredient)) {
-          ingredients.push(ingredient.ingredient);
+    let counter = 0;
+
+    this.recipes.forEach((recipe) => {
+      if (
+        this.filterOne(recipe, words, fIngredients, fAppliances, fUstensils)
+      ) {
+        recipe.ingredients.forEach((item) => {
+          if (!ingredients.includes(item.ingredient)) {
+            ingredients.push(item.ingredient);
+          }
+        });
+        if (!appliances.includes(recipe.appliance)) {
+          appliances.push(recipe.appliance);
         }
-      });
-      recipe.ustensils.forEach((ustensil) => {
-        if (!ustensils.includes(ustensil)) {
-          ustensils.push(ustensil);
-        }
-      });
-      while (i < n) {
-        const card = cards[i++];
-        if (card.dataset.id == recipe.id) {
-          card.classList.remove("hidden");
-          break;
-        } else {
-          card.classList.add("hidden");
-        }
+        recipe.ustensils.forEach((item) => {
+          if (!ustensils.includes(item)) {
+            ustensils.push(item);
+          }
+        });
+        recipe.card.classList.remove("hidden");
+        counter++;
+      } else {
+        recipe.card.classList.add("hidden");
       }
     });
-    while (i < n) {
-      cards[i++].classList.add("hidden");
-    }
+
+    // const recipes = this.filterAll(
+    //   this.recipes,
+    //   this.search.value,
+    //   this.queryTagAll(".ingredient"),
+    //   this.queryTagAll(".appliance"),
+    //   this.queryTagAll(".ustensil")
+    // );
+
+    // const cards = document.querySelectorAll("#recipes .cards .recipe");
+    // let i = 0;
+    // const n = cards.length;
+    // recipes.forEach((recipe) => {
+    //   if (!appliances.includes(recipe.appliance)) {
+    //     appliances.push(recipe.appliance);
+    //   }
+    //   recipe.ingredients.forEach((ingredient) => {
+    //     if (!ingredients.includes(ingredient.ingredient)) {
+    //       ingredients.push(ingredient.ingredient);
+    //     }
+    //   });
+    //   recipe.ustensils.forEach((ustensil) => {
+    //     if (!ustensils.includes(ustensil)) {
+    //       ustensils.push(ustensil);
+    //     }
+    //   });
+    //   while (i < n) {
+    //     const card = cards[i++];
+    //     if (card.dataset.id == recipe.id) {
+    //       card.classList.remove("hidden");
+    //       break;
+    //     } else {
+    //       card.classList.add("hidden");
+    //     }
+    //   }
+    // });
+    // while (i < n) {
+    //   cards[i++].classList.add("hidden");
+    // }
 
     updateFilter(this.ingredientDropdownList, ingredients);
     updateFilter(this.applianceDropdownList, appliances);
     updateFilter(this.ustensilDropdownList, ustensils);
 
-    this.updateRecipeCounter(recipes.length);
+    this.updateRecipeCounter(counter);
   }
 
-  filter(recipes, search, ingredients, appliances, ustensils) {
-    const words = search
+  static prepareWords(text) {
+    return (words = text
       .trim()
       .split(/\s+/)
       .filter((word) => word.length > 2 && !this.wholes.has(word))
-      .map((word) => escapeRegex(replaceDiacritic(word)));
-    return recipes.filter((recipe) => {
-      // Filtre sur les ingrédients
-      if (
-        !ingredients.every((ingredient) =>
-          recipe.ingredients.find((item) => item.ingredient === ingredient)
-        )
-      ) {
-        return false;
-      }
-      // Filtre sur les appareils
-      if (!appliances.every((appliance) => appliance === recipe.appliance)) {
-        return false;
-      }
-      // Filter sur les ustensils
-      if (
-        !ustensils.every((ustensil) =>
-          recipe.ustensils.find((item) => item === ustensil)
-        )
-      ) {
-        return false;
-      }
-      if (words.length === 0) {
-        return true;
-      }
-      // ... exclude whole word ... ?
-      return words.some((word) => {
+      .map((word) => escapeRegex(replaceDiacritic(word))));
+  }
+
+  static filterOne(recipe, words, ingredients, appliances, ustensils) {
+    // Filtre sur les tags
+    if (
+      !ingredients.every((ingredient) =>
+        recipe.ingredients.find((item) => item.ingredient === ingredient)
+      ) ||
+      (appliances.length > 0 && !appliances.includes(recipe.appliance)) ||
+      !ustensils.every((ustensil) => recipe.ustensils.includes(ustensil))
+    ) {
+      return false;
+    }
+    return (
+      words.length === 0 ||
+      words.some((word) => {
         const re = new RegExp(word, "i");
         return (
           re.exec(recipe.name) ||
           re.exec(recipe.description) ||
           recipe.ingredients.find((item) => re.exec(item.ingredient))
         );
-      });
-    });
+      })
+    );
+  }
+
+  filterAll(recipes, search, ingredients, appliances, ustensils) {
+    const words = this.prepareWords(search);
+    return recipes.filter((recipe) =>
+      this.filterOne(recipe, words, ingredients, appliances, ustensils)
+    );
   }
 
   updateRecipeCounter(value) {
