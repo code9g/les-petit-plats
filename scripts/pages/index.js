@@ -248,14 +248,16 @@ class App {
       text.length > this.search.minLength
         ? text.split(/\s+/).map((word) => escapeRegex(replaceDiacritic(word)))
         : [];
-    console.log(words);
-    const fIngredients = this.queryTagAll(".ingredient");
-    const fAppliances = this.queryTagAll(".appliance");
-    const fUstensils = this.queryTagAll(".ustensil");
+
+    const tagIngredients = this.queryTagAll(".ingredient");
+    const tagAppliances = this.queryTagAll(".appliance");
+    const tagUstensils = this.queryTagAll(".ustensil");
 
     let counter = 0;
     this.recipes.forEach((recipe) => {
-      if (filterOne(recipe, words, fIngredients, fAppliances, fUstensils)) {
+      if (
+        filterOne(recipe, words, tagIngredients, tagAppliances, tagUstensils)
+      ) {
         recipe.ingredients.forEach((item) => {
           if (!ingredients.includes(item.ingredient)) {
             ingredients.push(item.ingredient);
