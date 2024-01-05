@@ -10,54 +10,22 @@ import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
 
-function prepareWords(text, wholes = [], limit = 2) {
-  return text
-    .trim()
-    .split(/\s+/)
-    .reduce((accumulator, word) => {
-      if (word.length > limit && !wholes.has(word)) {
-        accumulator.push(escapeRegex(replaceDiacritic(word)));
-      }
-      return accumulator;
-    }, []);
-}
-
 function filterOne(recipe, words, ingredients, appliances, ustensils) {
-  // Filtre sur les tags
-  if (
-    !ingredients.every((ingredient) =>
-      recipe.ingredients.find((item) => item.ingredient === ingredient)
-    ) ||
-    (appliances.length > 0 && !appliances.includes(recipe.appliance)) ||
-    !ustensils.every((ustensil) => recipe.ustensils.includes(ustensil))
-  ) {
-    return false;
-  }
-  // Filter sur les mots
   return (
-    words.length === 0 ||
-    words.some((word) => {
-      const re = new RegExp(word, "i");
-      return (
-        re.exec(recipe.name) ||
-        re.exec(recipe.description) ||
-        recipe.ingredients.find((item) => re.exec(item.ingredient))
-      );
-    })
-  );
-}
-
-function filterAll(
-  recipes,
-  search,
-  ingredients,
-  appliances,
-  ustensils,
-  wholes = []
-) {
-  const words = prepareWords(search, wholes);
-  return recipes.filter((recipe) =>
-    filterOne(recipe, words, ingredients, appliances, ustensils)
+    ingredients.every((ingredient) =>
+      recipe.ingredients.find((item) => item.ingredient === ingredient)
+    ) &&
+    (appliances.length === 0 || appliances.includes(recipe.appliance)) &&
+    ustensils.every((ustensil) => recipe.ustensils.includes(ustensil)) &&
+    (words.length === 0 ||
+      words.some((word) => {
+        const re = new RegExp(word, "i");
+        return (
+          re.exec(recipe.name) ||
+          re.exec(recipe.description) ||
+          recipe.ingredients.find((item) => re.exec(item.ingredient))
+        );
+      }))
   );
 }
 
@@ -123,7 +91,6 @@ class App {
 
   async load(url) {
     this.recipes = await fetch(url).then((res) => res.json());
-    this.wholes = new Set(["de", "au", "aux", "le", "la", "les"]);
   }
 
   prepare() {
@@ -267,16 +234,21 @@ class App {
     );
   }
 
+  hiddeAllRecipes() {
+    for (const recipe of this.recipes) recipe.card.classList.add("hidden");
+  }
+
   updateSearch() {
     const ingredients = [];
     const appliances = [];
     const ustensils = [];
 
-    const words = prepareWords(
-      this.search.value,
-      this.wholes,
-      this.search.minLength
-    );
+    const text = this.search.value.trim();
+    const words =
+      text.length > this.search.minLength
+        ? text.split(/\s+/).map((word) => escapeRegex(replaceDiacritic(word)))
+        : [];
+    console.log(words);
     const fIngredients = this.queryTagAll(".ingredient");
     const fAppliances = this.queryTagAll(".appliance");
     const fUstensils = this.queryTagAll(".ustensil");
@@ -304,46 +276,6 @@ class App {
       }
     });
     this.updateRecipeCounter(counter);
-
-    // const recipes = filterAll(
-    //   this.recipes,
-    //   this.search.value,
-    //   this.queryTagAll(".ingredient"),
-    //   this.queryTagAll(".appliance"),
-    //   this.queryTagAll(".ustensil"),
-    //   this.wholes
-    // );
-
-    // const cards = document.querySelectorAll("#recipes .cards .recipe");
-    // let i = 0;
-    // const n = cards.length;
-    // recipes.forEach((recipe) => {
-    //   if (!appliances.includes(recipe.appliance)) {
-    //     appliances.push(recipe.appliance);
-    //   }
-    //   recipe.ingredients.forEach((ingredient) => {
-    //     if (!ingredients.includes(ingredient.ingredient)) {
-    //       ingredients.push(ingredient.ingredient);
-    //     }
-    //   });
-    //   recipe.ustensils.forEach((ustensil) => {
-    //     if (!ustensils.includes(ustensil)) {
-    //       ustensils.push(ustensil);
-    //     }
-    //   });
-    //   while (i < n) {
-    //     const card = cards[i++];
-    //     if (card.dataset.id == recipe.id) {
-    //       card.classList.remove("hidden");
-    //       break;
-    //     } else {
-    //       card.classList.add("hidden");
-    //     }
-    //   }
-    // });
-    // while (i < n) {
-    //   cards[i++].classList.add("hidden");
-    // }
 
     updateFilter(this.ingredientDropdownList, ingredients);
     updateFilter(this.applianceDropdownList, appliances);
