@@ -1,7 +1,7 @@
 import {
   dropdownFilterTemplate,
   updateFilter,
-} from "../templates/dropdownFilter.js";
+} from "../components/dropdownFilter.js";
 import { headerTemplate } from "../templates/header.js";
 import { mainTemplate } from "../templates/main.js";
 import { recipeCardTemplate } from "../templates/recipeCard.js";
@@ -61,7 +61,7 @@ class App {
       ?.classList.add("selected");
     this.tags.appendChild(tag);
     this.tags.classList.remove("hidden");
-    this.updateSearch();
+    this.updateTags();
   }
 
   removeTag(element) {
@@ -74,7 +74,7 @@ class App {
     if (!this.tags.querySelector(".tag")) {
       this.tags.classList.add("hidden");
     }
-    this.updateSearch();
+    this.updateTags();
   }
 
   handleClick(e) {
@@ -115,6 +115,8 @@ class App {
       recipe.searchDescription = replaceDiacritic(
         recipe.description
       ).toLowerCase();
+      recipe.showBySearch = true;
+      recipe.showByTags = true;
     }
 
     const fnSort = (item1, item2) => item1.localeCompare(item2);
@@ -238,26 +240,51 @@ class App {
     for (const recipe of this.recipes) recipe.card.classList.add("hidden");
   }
 
-  updateSearch() {
-    const ingredients = [];
-    const appliances = [];
-    const ustensils = [];
+  updateTags() {
+    const ingredients = this.queryTagAll(".ingredient");
+    const appliances = this.queryTagAll(".appliance");
+    const ustensils = this.queryTagAll(".ustensil");
+    this.recipes.forEach((recipe) => {
+      recipe.showByTags =
+        ingredients.every((ingredient) =>
+          recipe.ingredients.find((item) => item.ingredient === ingredient)
+        ) &&
+        (appliances.length === 0 || appliances.includes(recipe.appliance)) &&
+        ustensils.every((ustensil) => recipe.ustensils.includes(ustensil));
+    });
+    this.updateRecipes(this.recipes);
+  }
 
+  updateSearch() {
     const text = this.search.value.trim();
     const words =
       text.length > this.search.minLength
         ? text.split(/\s+/).map((word) => escapeRegex(replaceDiacritic(word)))
         : [];
 
-    const tagIngredients = this.queryTagAll(".ingredient");
-    const tagAppliances = this.queryTagAll(".appliance");
-    const tagUstensils = this.queryTagAll(".ustensil");
+    this.recipes.forEach((recipe) => {
+      recipe.showBySearch =
+        words.length === 0 ||
+        words.some((word) => {
+          const re = new RegExp(word, "i");
+          return (
+            re.exec(recipe.name) ||
+            re.exec(recipe.description) ||
+            recipe.ingredients.find((item) => re.exec(item.ingredient))
+          );
+        });
+    });
+    this.updateRecipes(this.recipes);
+  }
+
+  updateRecipes(recipes) {
+    const ingredients = [];
+    const appliances = [];
+    const ustensils = [];
 
     let counter = 0;
-    this.recipes.forEach((recipe) => {
-      if (
-        filterOne(recipe, words, tagIngredients, tagAppliances, tagUstensils)
-      ) {
+    recipes.forEach((recipe) => {
+      if (recipe.showBySearch && recipe.showByTags) {
         recipe.ingredients.forEach((item) => {
           if (!ingredients.includes(item.ingredient)) {
             ingredients.push(item.ingredient);
@@ -277,6 +304,7 @@ class App {
         recipe.card.classList.add("hidden");
       }
     });
+
     this.updateRecipeCounter(counter);
 
     updateFilter(this.ingredientDropdownList, ingredients);
