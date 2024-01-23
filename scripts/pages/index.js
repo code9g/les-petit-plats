@@ -18,10 +18,12 @@ class App {
     this.ustensils = [];
   }
 
+  // Chargement des données
   async load(url) {
     this.recipes = await fetch(url).then((res) => res.json());
   }
 
+  // Préparation et normalisation des données
   prepare() {
     const setIngredients = new Set();
     const setUstensils = new Set();
@@ -65,10 +67,7 @@ class App {
   }
 
   async run() {
-    // Chargement des données
     await this.load("./data/recipes.json");
-
-    // Préparation et normalisation des données
     this.prepare();
     this.render();
   }
@@ -105,8 +104,7 @@ class App {
     wrapper.appendChild(headerTemplate());
     wrapper.appendChild(mainTemplate());
 
-    // Mise en place du DOM
-    const handleSelect = (dropdown, item) => {
+    const handeSelect = (dropdown, item) => {
       this.addTag(dropdown.id, item.dataset.key, item.textContent);
       dropdown.close();
     };
@@ -124,21 +122,21 @@ class App {
       "ingredients",
       "Ingrédients",
       this.ingredients,
-      handleSelect,
+      handeSelect,
       handleUnSelect
     );
     this.applianceDropdownList = dropdownFilterTemplate(
       "appliances",
       "Appareils",
       this.appliances,
-      handleSelect,
+      handeSelect,
       handleUnSelect
     );
     this.ustensilDropdownList = dropdownFilterTemplate(
       "ustensils",
       "Ustensiles",
       this.ustensils,
-      handleSelect,
+      handeSelect,
       handleUnSelect
     );
 
