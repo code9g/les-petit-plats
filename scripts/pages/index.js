@@ -10,83 +10,12 @@ import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
 
-function filterOne(recipe, words, ingredients, appliances, ustensils) {
-  return (
-    ingredients.every((ingredient) =>
-      recipe.ingredients.find((item) => item.ingredient === ingredient)
-    ) &&
-    (appliances.length === 0 || appliances.includes(recipe.appliance)) &&
-    ustensils.every((ustensil) => recipe.ustensils.includes(ustensil)) &&
-    (words.length === 0 ||
-      words.some((word) => {
-        const re = new RegExp(word, "i");
-        return (
-          re.exec(recipe.name) ||
-          re.exec(recipe.description) ||
-          recipe.ingredients.find((item) => re.exec(item.ingredient))
-        );
-      }))
-  );
-}
-
 class App {
   constructor() {
     this.recipes = null;
     this.ingredients = [];
     this.appliances = [];
     this.ustensils = [];
-  }
-
-  handleSelect(dropdown, item) {
-    this.addTag(dropdown.id, item.dataset.key, item.textContent);
-    dropdown.close();
-  }
-
-  handleUnSelect(dropdown, item) {
-    this.removeTag(
-      this.tags.querySelector(
-        `.tag[data-target="${dropdown.id}"][data-key="${item.dataset.key}"]`
-      )
-    );
-    dropdown.close();
-  }
-
-  addTag(target, key, text) {
-    const tag = tagTemplate(target, key, text, (e) => {
-      e.preventDefault();
-      this.removeTag(e.currentTarget.closest(".tag"));
-    });
-    document
-      .querySelector(`#${target} li[data-key="${key}"]:not(.selected)`)
-      ?.classList.add("selected");
-    this.tags.appendChild(tag);
-    this.tags.classList.remove("hidden");
-    this.updateTags();
-  }
-
-  removeTag(element) {
-    document
-      .querySelector(
-        `#${element.dataset.target} li[data-key="${element.dataset.key}"].selected`
-      )
-      ?.classList.remove("selected");
-    element.remove();
-    if (!this.tags.querySelector(".tag")) {
-      this.tags.classList.add("hidden");
-    }
-    this.updateTags();
-  }
-
-  handleClick(e) {
-    const target = e.target;
-    const excepted =
-      target.classList.contains("dropdown") || target.closest(".dropdown");
-
-    document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
-      if (dropdown !== excepted) {
-        dropdown.close();
-      }
-    });
   }
 
   async load(url) {
@@ -135,43 +64,82 @@ class App {
     });
   }
 
-  render() {
-    // ...
-  }
-
   async run() {
     // Chargement des données
     await this.load("./data/recipes.json");
 
     // Préparation et normalisation des données
     this.prepare();
+    this.render();
+  }
 
+  addTag(target, key, text) {
+    const tag = tagTemplate(target, key, text, (e) => {
+      e.preventDefault();
+      this.removeTag(e.currentTarget.closest(".tag"));
+    });
+    document
+      .querySelector(`#${target} li[data-key="${key}"]:not(.selected)`)
+      ?.classList.add("selected");
+    this.tags.appendChild(tag);
+    this.tags.classList.remove("hidden");
+    this.updateTags();
+  }
+
+  removeTag(element) {
+    document
+      .querySelector(
+        `#${element.dataset.target} li[data-key="${element.dataset.key}"].selected`
+      )
+      ?.classList.remove("selected");
+    element.remove();
+    if (!this.tags.querySelector(".tag")) {
+      this.tags.classList.add("hidden");
+    }
+    this.updateTags();
+  }
+
+  render() {
     const wrapper = document.querySelector(".wrapper");
 
     wrapper.appendChild(headerTemplate());
     wrapper.appendChild(mainTemplate());
 
     // Mise en place du DOM
+    const handleSelect = (dropdown, item) => {
+      this.addTag(dropdown.id, item.dataset.key, item.textContent);
+      dropdown.close();
+    };
+
+    const handleUnSelect = (dropdown, item) => {
+      this.removeTag(
+        this.tags.querySelector(
+          `.tag[data-target="${dropdown.id}"][data-key="${item.dataset.key}"]`
+        )
+      );
+      dropdown.close();
+    };
+
     this.ingredientDropdownList = dropdownFilterTemplate(
       "ingredients",
       "Ingrédients",
       this.ingredients,
-      this.handleSelect.bind(this),
-      this.handleUnSelect.bind(this)
+      handleSelect,
+      handleUnSelect
     );
     this.applianceDropdownList = dropdownFilterTemplate(
       "appliances",
       "Appareils",
       this.appliances,
-      this.handleSelect.bind(this),
-      this.handleUnSelect.bind(this)
+      handleSelect,
+      handleUnSelect
     );
     this.ustensilDropdownList = dropdownFilterTemplate(
       "ustensils",
       "Ustensiles",
       this.ustensils,
-      this.handleSelect.bind(this),
-      this.handleUnSelect.bind(this)
+      handleSelect,
+      handleUnSelect
     );
 
     const filters = document.querySelector(".filters");
@@ -184,7 +152,14 @@ class App {
     this.recipeCounter = document.querySelector(".results");
 
     // Fermeture des "dropdowns" quand on clique à l'extérieur
-    document.addEventListener("click", this.handleClick.bind(this));
+    document.addEventListener("click", (e) => {
+      const excepted = e.target.closest(".dropdown");
+      document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
+        if (dropdown !== excepted) {
+          dropdown.close();
+        }
+      });
+    });
 
     const cards = document.querySelector("#recipes .cards");
     for (const recipe of this.recipes) {
@@ -234,10 +209,6 @@ class App {
     return Array.from(this.tags.querySelectorAll(target)).map(
       (item) => item.textContent
     );
-  }
-
-  hiddeAllRecipes() {
-    for (const recipe of this.recipes) recipe.card.classList.add("hidden");
   }
 
   updateTags() {
