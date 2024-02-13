@@ -229,9 +229,9 @@ class App {
 
     const words = text.length > this.search.minLength ? text.split(/s+/) : [];
 
-    const regexpList = [];
+    const reList = [];
     for (let i = words.length - 1; i >= 0; i--) {
-      regexpList.push(new RegExp(escapeRegex(replaceDiacritic(words[i])), "i"));
+      reList.push(new RegExp(escapeRegex(replaceDiacritic(words[i])), "i"));
     }
 
     const findIngredient = (ingredients, regexp) => {
@@ -245,12 +245,12 @@ class App {
 
     for (let i = this.recipes.length - 1; i >= 0; i--) {
       const recipe = this.recipes[i];
-      if (regexpList.length === 0) {
+      if (reList.length === 0) {
         recipe.showBySearch = true;
       } else {
         recipe.showBySearch = false;
-        for (let j = regexpList.length - 1; j >= 0; j--) {
-          const re = regexpList[j];
+        for (let j = reList.length - 1; j >= 0; j--) {
+          const re = reList[j];
           if (
             re.exec(recipe.name) ||
             re.exec(recipe.description) ||
