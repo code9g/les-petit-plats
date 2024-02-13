@@ -213,6 +213,7 @@ class App {
     const ingredients = this.queryTagAll(".ingredient");
     const appliances = this.queryTagAll(".appliance");
     const ustensils = this.queryTagAll(".ustensil");
+
     this.recipes.forEach((recipe) => {
       recipe.showByTags =
         ingredients.every((ingredient) =>
@@ -221,21 +222,22 @@ class App {
         (appliances.length === 0 || appliances.includes(recipe.appliance)) &&
         ustensils.every((ustensil) => recipe.ustensils.includes(ustensil));
     });
+
     this.updateRecipes(this.recipes);
   }
 
   updateSearch() {
     const text = this.search.value.trim();
-    const words =
-      text.length > this.search.minLength
-        ? text.split(/\s+/).map((word) => escapeRegex(replaceDiacritic(word)))
-        : [];
+    const words = text.length > this.search.minLength ? text.split(/\s+/) : [];
+
+    const reList = words.map(
+      (word) => new RegExp(escapeRegex(replaceDiacritic(word)), "i")
+    );
 
     this.recipes.forEach((recipe) => {
       recipe.showBySearch =
-        words.length === 0 ||
-        words.some((word) => {
-          const re = new RegExp(word, "i");
+        reList.length === 0 ||
+        reList.some((re) => {
           return (
             re.exec(recipe.name) ||
             re.exec(recipe.description) ||
@@ -243,6 +245,7 @@ class App {
           );
         });
     });
+
     this.updateRecipes(this.recipes);
   }
 
