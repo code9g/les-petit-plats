@@ -271,27 +271,33 @@ class App {
     const ustensils = [];
 
     let counter = 0;
-    recipes.forEach((recipe) => {
+    for (let i = recipes.length - 1; i >= 0; i--) {
+      const recipe = recipes[i];
       if (recipe.showBySearch && recipe.showByTags) {
-        recipe.ingredients.forEach((item) => {
+        for (let j = recipe.ingredients.length - 1; j >= 0; j--) {
+          const item = recipe.ingredients[j];
           if (!ingredients.includes(item.ingredient)) {
             ingredients.push(item.ingredient);
           }
-        });
+        }
+
         if (!appliances.includes(recipe.appliance)) {
           appliances.push(recipe.appliance);
         }
-        recipe.ustensils.forEach((item) => {
+
+        for (let j = recipe.ustensils.length - 1; j >= 0; j--) {
+          const item = recipe.ustensils[j];
           if (!ustensils.includes(item)) {
             ustensils.push(item);
           }
-        });
+        }
+
         recipe.card.classList.remove("hidden");
         counter++;
       } else {
         recipe.card.classList.add("hidden");
       }
-    });
+    }
 
     this.updateRecipeCounter(counter);
 
