@@ -1,19 +1,19 @@
-<mxfile host="app.diagrams.net" modified="2024-04-01T08:31:59.774Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="ogwBwI_rmsuW226t-Z_N" version="24.2.1" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-01T08:32:51.322Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="q6wZoneyoj3IKwxsIx_H" version="24.2.1" type="github">
   <diagram name="Page-1" id="fu2fMV-L6i4KWlRdfJtE">
     <mxGraphModel dx="1430" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="mlouHhY-SC-koA-eOmkY-49" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=12 12;" vertex="1" parent="1">
-          <mxGeometry x="150" y="600" width="570" height="360" as="geometry" />
+          <mxGeometry x="150" y="600" width="610" height="360" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-2" value="Texte saisie par l&#39;utilisateur" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="372" y="130" width="108" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="mlouHhY-SC-koA-eOmkY-3" value="Décomposition du texte en mot dans un tableau (words)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="mlouHhY-SC-koA-eOmkY-3" value="Décomposition du texte en&lt;div&gt;&amp;nbsp;mot dans un tableau (words)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="342" y="200" width="168" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="mlouHhY-SC-koA-eOmkY-5" value="Transformation du tableau de mot en son équivalent RegExp (reList)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="mlouHhY-SC-koA-eOmkY-5" value="Transformation du tableau de&lt;div&gt;mot en son équivalent&lt;/div&gt;&lt;div&gt;RegExp (reList)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="342" y="280" width="168" height="60" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-6" value="Parcourir chaque Recette (recipe) avec recipes.forEach" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -35,7 +35,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-10" value="Parcourir chaque expression RegExp (re) avec reList.some" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="366" y="620" width="120" height="60" as="geometry" />
+          <mxGeometry x="340" y="620" width="172" height="60" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="mlouHhY-SC-koA-eOmkY-11" target="mlouHhY-SC-koA-eOmkY-33">
           <mxGeometry relative="1" as="geometry" />
@@ -62,7 +62,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-20" value="recipe.showBySearch = false" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="520" y="630" width="176" height="40" as="geometry" />
+          <mxGeometry x="560" y="630" width="176" height="40" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="mlouHhY-SC-koA-eOmkY-2">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
