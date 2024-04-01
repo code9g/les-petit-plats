@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-04-01T08:32:51.322Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="q6wZoneyoj3IKwxsIx_H" version="24.2.1" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-01T08:33:40.883Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="k24t4fMpfcelOTKuocd7" version="24.2.1" type="github">
   <diagram name="Page-1" id="fu2fMV-L6i4KWlRdfJtE">
-    <mxGraphModel dx="1430" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="691" dy="377" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -15,6 +15,9 @@
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-5" value="Transformation du tableau de&lt;div&gt;mot en son équivalent&lt;/div&gt;&lt;div&gt;RegExp (reList)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="342" y="280" width="168" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mlouHhY-SC-koA-eOmkY-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="mlouHhY-SC-koA-eOmkY-6" target="mlouHhY-SC-koA-eOmkY-52">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-6" value="Parcourir chaque Recette (recipe) avec recipes.forEach" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="342" y="360" width="168" height="60" as="geometry" />
@@ -58,7 +61,7 @@
             <mxPoint x="392" y="620" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="mlouHhY-SC-koA-eOmkY-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="mlouHhY-SC-koA-eOmkY-20" target="mlouHhY-SC-koA-eOmkY-6">
+        <mxCell id="mlouHhY-SC-koA-eOmkY-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="mlouHhY-SC-koA-eOmkY-20" target="mlouHhY-SC-koA-eOmkY-6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-20" value="recipe.showBySearch = false" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -104,6 +107,9 @@
         </mxCell>
         <mxCell id="mlouHhY-SC-koA-eOmkY-33" value="retourne true" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="366" y="890" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mlouHhY-SC-koA-eOmkY-52" value="Fin" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="350" width="108" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
