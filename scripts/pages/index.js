@@ -2,10 +2,10 @@ import {
   dropdownFilterTemplate,
   updateFilter,
 } from "../components/dropdownFilter.js";
-import { headerTemplate } from "../templates/header.js";
-import { mainTemplate } from "../templates/main.js";
-import { recipeCardTemplate } from "../templates/recipeCard.js";
-import { tagTemplate } from "../templates/tag.js";
+import { headerTemplate } from "../templates/headerTemplate.js";
+import { mainTemplate } from "../templates/mainTemplate.js";
+import { recipeCardTemplate } from "../templates/recipeCardTemplate.js";
+import { tagTemplate } from "../templates/tagTemplate.js";
 import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
