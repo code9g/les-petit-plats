@@ -141,21 +141,6 @@ export function dropdownFilterTemplate(
     result.classList.remove("open");
   };
 
-  //   Object.defineProperties(result, "open", {
-  //     get: function () {
-  //       return this.classList.contains("open");
-  //     },
-  //     set: function (value) {
-  //       if (this.open) {
-  //         this.close();
-  //       } else {
-  //         this.show();
-  //       }
-  //     },
-  //   });
-
-  //   console.log(result.open);
-
   input.addEventListener("input", () => {
     const text = replaceDiacritic(input.value.trim());
     const re = new RegExp(escapeRegex(text), "i");
@@ -168,12 +153,7 @@ export function dropdownFilterTemplate(
         li.classList.add("filtered");
       }
     });
-
-    if (counter === 0) {
-      liEmpty.classList.remove("hidden");
-    } else {
-      liEmpty.classList.add("hidden");
-    }
+    liEmpty.classList.toggle("hidden", counter !== 0);
   });
 
   button.addEventListener("click", (e) => {
