@@ -12,13 +12,17 @@ function clearInput(element, dispatch = true) {
 }
 
 export function updateFilter(dropdown, list) {
+  let counter = 0;
   dropdown.querySelectorAll(".dropdown-item").forEach((element) => {
     if (list.includes(element.textContent)) {
       element.classList.remove("hidden");
+      counter++;
     } else {
       element.classList.add("hidden");
     }
   });
+  const liEmpty = dropdown.querySelector(".dropdown-empty");
+  liEmpty.classList.toggle("hidden", counter !== 0);
 }
 
 export function dropdownFilterTemplate(
