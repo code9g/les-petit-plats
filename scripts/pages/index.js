@@ -227,41 +227,43 @@ class App {
   updateSearch() {
     const text = this.search.value.trim();
 
-    const words = text.length > this.search.minLength ? text.split(/s+/) : [];
-
-    const reList = [];
-    for (let i = words.length - 1; i >= 0; i--) {
-      reList.push(new RegExp(escapeRegex(replaceDiacritic(words[i])), "i"));
-    }
+    const words = [];
+    for (let word of text.split(/\s+/))
+      if (word.length >= this.search.minLength) {
+        words.push(new RegExp(escapeRegex(replaceDiacritic(word)), "i"));
+      }
 
     const findIngredient = (ingredients, regexp) => {
       for (let i = ingredients.length - 1; i >= 0; i--) {
-        if (regexp.exec(ingredients[i].ingredient)) {
+        if (regexp.exec(ingredients[i].searchingredient)) {
           return true;
         }
       }
       return false;
     };
 
-    for (let i = this.recipes.length - 1; i >= 0; i--) {
-      const recipe = this.recipes[i];
-      if (reList.length === 0) {
-        recipe.showBySearch = true;
-      } else {
+    if (words.length > 0) {
+      for (let i = this.recipes.length - 1; i >= 0; i--) {
+        const recipe = this.recipes[i];
         recipe.showBySearch = false;
-        for (let j = reList.length - 1; j >= 0; j--) {
-          const re = reList[j];
+        for (let j = words.length - 1; j >= 0; j--) {
+          const word = words[j];
           if (
-            re.exec(recipe.name) ||
-            re.exec(recipe.description) ||
-            findIngredient(recipe.ingredients, re)
+            word.exec(recipe.searchName) ||
+            word.exec(recipe.searchDescription) ||
+            findIngredient(recipe.ingredients, word)
           ) {
             recipe.showBySearch = true;
             break;
           }
         }
       }
+    } else {
+      for (let recipe of this.recipes) {
+        recipe.showBySearch = true;
+      }
     }
+
     this.updateRecipes(this.recipes);
   }
 
