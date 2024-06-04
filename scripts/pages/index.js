@@ -227,23 +227,21 @@ class App {
   }
 
   updateSearch() {
-    const text = this.search.value.trim();
-    const words = text.length > this.search.minLength ? text.split(/\s+/) : [];
-
-    const reList = words.map(
-      (word) => new RegExp(escapeRegex(replaceDiacritic(word)), "i")
-    );
+    const words = this.search.value
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > this.search.minLength)
+      .map((word) => new RegExp(escapeRegex(replaceDiacritic(word)), "i"));
 
     this.recipes.forEach((recipe) => {
       recipe.showBySearch =
-        reList.length === 0 ||
-        reList.some((re) => {
-          return (
-            re.exec(recipe.name) ||
-            re.exec(recipe.description) ||
-            recipe.ingredients.find((item) => re.exec(item.ingredient))
-          );
-        });
+        words.length === 0 ||
+        words.some(
+          (re) =>
+            re.exec(recipe.searchName) ||
+            re.exec(recipe.searchDescription) ||
+            recipe.ingredients.find((item) => re.exec(item.searchIngredient))
+        );
     });
 
     this.updateRecipes(this.recipes);
