@@ -233,16 +233,20 @@ class App {
       .filter((word) => word.length > this.search.minLength)
       .map((word) => new RegExp(escapeRegex(replaceDiacritic(word)), "i"));
 
-    this.recipes.forEach((recipe) => {
-      recipe.showBySearch =
-        words.length === 0 ||
-        words.some(
+    if (words.length > 0) {
+      this.recipes.forEach((recipe) => {
+        recipe.showBySearch = words.some(
           (re) =>
             re.exec(recipe.searchName) ||
             re.exec(recipe.searchDescription) ||
             recipe.ingredients.find((item) => re.exec(item.searchIngredient))
         );
-    });
+      });
+    } else {
+      this.recipes.forEach((recipe) => {
+        recipe.showBySearch = true;
+      });
+    }
 
     this.updateRecipes(this.recipes);
   }
