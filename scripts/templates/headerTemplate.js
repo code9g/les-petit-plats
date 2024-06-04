@@ -36,7 +36,7 @@ export function headerTemplate() {
   input.type = "text";
   input.name = "search";
   input.className = "input-search";
-  input.minLength = 2;
+  input.minLength = 3;
   input.placeholder = "Rechercher une recette, un ingrédient, ...";
 
   const btnClear = document.createElement("button");
