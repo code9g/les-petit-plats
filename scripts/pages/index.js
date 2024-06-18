@@ -230,7 +230,7 @@ class App {
     const words = this.search.value
       .trim()
       .split(/\s+/)
-      .filter((word) => word.length > this.search.minLength)
+      .filter((word) => word.length >= this.search.minLength)
       .map((word) => new RegExp(escapeRegex(replaceDiacritic(word)), "i"));
 
     if (words.length > 0) {
