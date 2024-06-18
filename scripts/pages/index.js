@@ -6,9 +6,10 @@ import { headerTemplate } from "../templates/headerTemplate.js";
 import { mainTemplate } from "../templates/mainTemplate.js";
 import { recipeCardTemplate } from "../templates/recipeCardTemplate.js";
 import { tagTemplate } from "../templates/tagTemplate.js";
-import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
+import { debounce, escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
 const KEY_TIMEOUT = 300;
+const INPUT_EVENT = new Event("input");
 
 class App {
   constructor() {
@@ -169,36 +170,23 @@ class App {
 
     const form = document.querySelector("form[name=search]");
     this.search = form.querySelector("input.input-search");
-    let h = null;
 
-    let inputTrigger = false;
-    this.search.addEventListener("input", (e) => {
-      e.preventDefault();
-      clearTimeout(h);
-      h = setTimeout(() => {
-        if (this.search.value.length >= this.search.minLength) {
-          inputTrigger = true;
-          this.updateMainSearch();
-        } else if (inputTrigger) {
-          inputTrigger = false;
-          this.updateMainSearch();
-        }
-      }, KEY_TIMEOUT);
-    });
+    this.search.addEventListener(
+      "input",
+      debounce(() => {
+        this.updateMainSearch();
+      }, KEY_TIMEOUT)
+    );
 
     form.querySelector(".btn-clear").addEventListener("click", (e) => {
       e.preventDefault();
-      clearTimeout(h);
       this.search.value = "";
+      this.search.dispatchEvent(INPUT_EVENT);
       this.search.focus();
-      h = setTimeout(() => {
-        this.updateMainSearch();
-      }, KEY_TIMEOUT);
     });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      clearTimeout(h);
       this.updateMainSearch();
     });
   }
