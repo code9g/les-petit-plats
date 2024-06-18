@@ -1,16 +1,5 @@
 import { escapeRegex, replaceDiacritic } from "../utils/tools.js";
 
-const inputEvent = new CustomEvent("input", { bubbles: true });
-
-function clearInput(element, dispatch = true) {
-  if (element.value !== "") {
-    element.value = "";
-    if (dispatch) {
-      element.dispatchEvent(inputEvent);
-    }
-  }
-}
-
 export function updateFilter(dropdown, list) {
   let counter = 0;
   dropdown.querySelectorAll(".dropdown-item").forEach((element) => {
@@ -116,12 +105,9 @@ export function dropdownFilterTemplate(
 
   result.show = function () {
     if (!this.isOpen()) {
-      clearInput(input);
-      this.classList.add("open");
+      reset.click();
       ul.scrollTop = 0;
-      requestAnimationFrame(() => {
-        input.focus();
-      });
+      this.classList.add("open");
     }
   };
 
@@ -163,8 +149,16 @@ export function dropdownFilterTemplate(
 
   reset.addEventListener("click", (e) => {
     e.preventDefault();
-    clearInput(input);
-    input.focus();
+    input.value = "";
+    let counter = 0;
+    ul.querySelectorAll(".dropdown-item").forEach((li) => {
+      li.classList.remove("filtered");
+      counter++;
+    });
+    liEmpty.classList.toggle("hidden", counter !== 0);
+    requestAnimationFrame(() => {
+      input.focus();
+    });
   });
 
   return result;
