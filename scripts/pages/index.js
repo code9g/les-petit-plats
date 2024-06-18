@@ -82,7 +82,7 @@ class App {
       ?.classList.add("selected");
     this.tags.appendChild(tag);
     this.tags.classList.remove("hidden");
-    this.updateTags();
+    this.updateTagSearch();
   }
 
   removeTag(element) {
@@ -95,7 +95,7 @@ class App {
     if (!this.tags.querySelector(".tag")) {
       this.tags.classList.add("hidden");
     }
-    this.updateTags();
+    this.updateTagSearch();
   }
 
   render() {
@@ -178,10 +178,10 @@ class App {
       h = setTimeout(() => {
         if (this.search.value.length >= this.search.minLength) {
           inputTrigger = true;
-          this.updateSearch();
+          this.updateMainSearch();
         } else if (inputTrigger) {
           inputTrigger = false;
-          this.updateSearch();
+          this.updateMainSearch();
         }
       }, KEY_TIMEOUT);
     });
@@ -192,14 +192,14 @@ class App {
       this.search.value = "";
       this.search.focus();
       h = setTimeout(() => {
-        this.updateSearch();
+        this.updateMainSearch();
       }, KEY_TIMEOUT);
     });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       clearTimeout(h);
-      this.updateSearch();
+      this.updateMainSearch();
     });
   }
 
@@ -209,7 +209,7 @@ class App {
     );
   }
 
-  updateTags() {
+  updateTagSearch() {
     const ingredients = this.queryTagAll(".ingredient");
     const appliances = this.queryTagAll(".appliance");
     const ustensils = this.queryTagAll(".ustensil");
@@ -226,7 +226,7 @@ class App {
     this.updateRecipes(this.recipes);
   }
 
-  updateSearch() {
+  updateMainSearch() {
     const words = this.search.value
       .trim()
       .split(/\s+/)
